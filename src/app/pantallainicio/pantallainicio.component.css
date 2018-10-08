@@ -1,0 +1,80 @@
+/*Begin Estilos NavBar*/
+    @media(max-width:768px){
+        .navbarPadre{
+    width: 100%;
+    }
+
+    }
+
+    @media(max-width:480px){
+    .navbarPadre{
+    width: 100%;
+    }
+    }
+    /*Es el tilo de la barra padre*/
+    .navbarPadre {
+    overflow: hidden;
+    background-color: #da291c;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .navbarPadre a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    }
+
+    .desplegable {
+    float: left;
+    overflow: hidden;
+    }
+
+    .desplegable .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+    }
+
+    /*Cuando se pasa el cursor sobre algun menu toma este color*/
+    .navbarPadre a:hover, .desplegable:hover .dropbtn {
+    background-color: #CFCFCF;
+    color: black;
+    }
+
+    /*Estilos del menu hijo*/
+    .desplegado-contenido {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    }
+
+    .desplegado-contenido a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    }
+
+    /*Estilos del menu hijo cuando paso el cursor sobre el*/
+    .desplegado-contenido a:hover {
+    background-color: #f1f1f1;
+    color: black;
+    }
+
+    .desplegable:hover .desplegado-contenido {
+    display: block;
+    }
+/*End Estilos NavBar*/

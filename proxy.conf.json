@@ -1,0 +1,7 @@
+{
+    "/cxf": {
+        "target": "http://172.20.6.6:8185",
+        "secure":false,
+        "changeOrigin":true
+    }
+}

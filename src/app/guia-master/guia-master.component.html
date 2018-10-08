@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Guía Master</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="navbarPadre">
+        <a routerLink="/pantallainicio">Inicio</a>
+        <div class="desplegable">
+            <button class="dropbtn">Guía Master
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="desplegado-contenido">
+                <a routerLink="/guiaMaster">Guía Master</a>
+                <a routerLink="/manifiestoAduanas">Manifiesto Aduanas</a>
+            </div>
+        </div>
+        <div class="desplegable">
+            <button class="dropbtn">Documento Importar
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="desplegado-contenido">
+                <a routerLink="/documentoImportacion">Documento Importacion</a>
+            </div>
+        </div>
+        <div class="desplegable">
+            <button class="dropbtn">Impresion Etiqueta
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="desplegado-contenido">
+                <a routerLink="/impresionEtiqueta">Impresion Etiqueta</a>
+            </div>
+        </div>
+        <div class="desplegable">
+            <button class="dropbtn">Facturación
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="desplegado-contenido">
+                <a routerLink="/facturacion">Facturación</a>
+            </div>
+        </div>
+        <div class="desplegable">
+            <button class="dropbtn">Reportes
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="desplegado-contenido">
+                <a routerLink="/reporteDiscrepancias">Reporte Discrepancias</a>
+            </div>
+        </div>
+    </div>
+
+
+    <form (submit)="buscarGuia($event)">
+        <h4>Asignación Guía Master</h4>
+        <div *ngIf="mostrarMensaje">
+            <div class="alert alert-danger" role="alert" style="text-align: center">
+                {{mensajeAlerta}}
+            </div>
+        </div>
+
+        <div *ngIf="mostrarMenSuccessMawb">
+            <div class="alert alert-success" role="alert" style="text-align: center">
+                {{mensajeSuccessMawb}}
+            </div>
+        </div>
+
+
+        <div *ngIf="mostrarMenErrorMawb">
+            <div class="alert alert-danger " role="alert" style="text-align: center">
+
+                <strong>Error al guardar el MAWB: </strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeErrorMawb}}
+                </div>
+            </div>
+        </div>
+
+
+        <input type="text" placeholder="Fecha Inicio" name="txtDateIni" id="txtDateIni" class="form-control"
+            bsDatepicker [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
+
+        <input type="text" placeholder="Fecha Fin" name="txtDateFin" id="txtDateFin" class="form-control" bsDatepicker
+            [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
+
+
+        <input type="text" placeholder="Número Guía" id="txtNroGuia" name="txtNroGuia" class="form-control">
+        <input type="submit" value="Buscar" class="btn-primary ">
+        <br>
+        <br>
+        <table role="table" *ngIf="mostrarTbl" class="table">
+            <thead role="rowgroup">
+                <tr role="row">
+                    <th role="columnheader"></th>
+                    <th role="columnheader">TrackingId</th>
+                    <th role="columnheader">Guía Alertan</th>
+                    <th role="columnheader">MAWB</th>
+                    <th role="columnheader">Date MAWB</th>
+                </tr>
+            </thead>
+            <tbody role="rowgroup" *ngFor="let guia of guias">
+                <tr role="row">
+                    <td role="cell">
+                        <input type="checkbox" name="optradio" (change)="getSelectGuiaMaster(guia.Shipment_number,$event.target.checked)">
+                    </td>
+                    <td role="cell">{{guia.client_reference}}</td>
+                    <td role="cell">{{guia.Shipment_number}}</td>
+                    <td role="cell">{{guia.guiamaster}}</td>
+                    <td role="cell">{{guia.guiamasterdate}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div *ngIf="mostrarBtnMAWB">
+            <input type="submit" value="Asignar MAWB" class="btn-info" (click)="open(content)">
+
+        </div>
+    </form>
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Nuevo Nro Guia Master</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form (submit)="actualizarGuias($event)" class="formModal">
+            <h4>Asignación Guía Master</h4>
+            <div *ngIf="mostrarMensajeMawb">
+                <div class="alert alert-danger" role="alert" style="text-align: center">
+                    {{mensajeAlertaMawb}}
+                </div>
+            </div>
+
+            <input type="text" placeholder="Nro de MAWB" id="txtNroMawb" name="txtNroMawb" class="form-control">
+
+            <input type="text" placeholder="Fecha de MAWB" name="txtFechMawb" id="txtFechMawb" class="form-control"
+                bsDatepicker [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
+
+            <input type="submit" value="Guardar MAWB" class="btn-primary ">
+
+
+
+        </form>
+    </ng-template>
+
+    <!---->
+
+    <!--<ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Nuevo Nro Guia Master</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form (submit)="actualizarGuias($event)" align="center" class="form-horizontal">
+
+                <br>
+
+                <div *ngIf="mostrarMensajeMawb">
+                    <div class="alert alert-danger alertMsg msgMawb" role="alert">
+                        {{mensajeAlertaMawb}}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4" align="left">
+                        <label class="col-md-10 control-label">Nro de MAWB:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" id="txtNroMawb" class="form-control input-md ">
+                    </div>
+
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-lg-4" align="left">
+                        <label class="col-md-10 control-label">Fecha de MAWB:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" id="txtFechMawb" autofocus class="form-control input-md " bsDatepicker
+                            [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
+                    </div>
+
+                </div>
+                <br>
+                <div class="row" align="center">
+                    <div class="col-lg-4" style="padding-left:12%;">
+                        <input type="submit" value="Guardar MAWB" class="btn btn-info btnBuscar">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </ng-template>-->
+</body>
+
+</html>
