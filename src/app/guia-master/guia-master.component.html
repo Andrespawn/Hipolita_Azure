@@ -68,8 +68,13 @@
     <form (submit)="buscarGuia($event)">
         <h4>Asignación Guía Master</h4>
         <div *ngIf="mostrarMensaje">
-            <div class="alert alert-danger" role="alert" style="text-align: center">
-                {{mensajeAlerta}}
+            <div class="alert alert-warning" role="alert" style="text-align: center">
+                <strong>¡Advertencia!</strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeAlerta}}
+                </div>
+                
             </div>
         </div>
 

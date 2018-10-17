@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Documento importación</title>
+    <title>Impresion Etiqueta</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
@@ -64,7 +64,40 @@
             </div>
         </div>
     </div>
-        
+
+
+
+    <form (submit)="generar($event)">
+        <h4>Impresion de etiqueta</h4>
+
+        <div *ngIf="mostrarMsgValidaciones">
+            <div class="alert alert-warning" role="alert" style="text-align: center">
+                <strong>¡Advertencia!</strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeValidacuines}}
+                </div>
+
+            </div>
+        </div>
+
+        <input type="text" placeholder="Número Guía" id="txtNroGuia" name="txtNroGuia" class="form-control">
+
+        <select class="form-control " name="cmbOpcion" id="cmbOpcion">
+            <option disabled="true" value="void" >Seleccione una opción</option>
+            <option value="TrackingId">TrackingId</option>
+            <option value="GuiaAlertan">Guía Alertan</option>
+            <option value="MAWB">MAWB</option>
+            <option value="Date MAWB">DateMAWB</option>
+        </select>
+
+<br>
+
+        <input type="submit" value="Generar" class="btn-primary ">
+        <br>
+
+    </form>
+
 </body>
 
 </html>
