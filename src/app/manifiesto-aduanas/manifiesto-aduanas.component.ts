@@ -22,7 +22,7 @@ mostarMsjValidacion:boolean = false;
     const nroGuia: string = target.querySelector('#txtNroGuia').value;
     
 if(nroGuia == ""){
-  this.msjValidacion = "Debe diligenciar el campo 'Número Guía Master'";
+  this.msjValidacion = "Debe diligenciar el campo 'Número Guía Master'.";
   this.mostarMsjValidacion = true;
 }else{
   this.msjValidacion = "";
