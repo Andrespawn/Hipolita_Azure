@@ -83,7 +83,17 @@
                 {{mensajeSuccessMawb}}
             </div>
         </div>
+        
+        <div *ngIf="mostrarMenErrorService">
+            <div class="alert alert-danger " role="alert" style="text-align: center">
 
+                <strong>Error </strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeErrorService}}
+                </div>
+            </div>
+        </div>
 
         <div *ngIf="mostrarMenErrorMawb">
             <div class="alert alert-danger " role="alert" style="text-align: center">
