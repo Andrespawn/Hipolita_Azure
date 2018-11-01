@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-facturacion',
@@ -13,7 +15,7 @@ export class FacturacionComponent implements OnInit {
   mostrarMensajeValidacion: Boolean = false;
   mensajeValidacion: String = '';
 
-  constructor() {
+  constructor(, private spinner: NgxSpinnerService) { 
    }
 
   ngOnInit() {

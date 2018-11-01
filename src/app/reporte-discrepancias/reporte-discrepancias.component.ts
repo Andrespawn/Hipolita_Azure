@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DiscrepanciaServices } from './DiscrepanciaServices';
-import {DownloadFile} from '../Services/DownloadFile';
+import { DownloadFile } from '../Services/DownloadFile';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-reporte-discrepancias',
@@ -10,7 +11,7 @@ import {DownloadFile} from '../Services/DownloadFile';
 })
 export class ReporteDiscrepanciasComponent implements OnInit {
 
-  constructor(private discrepanciaservices: DiscrepanciaServices , private downloadFile: DownloadFile) { }
+  constructor(private discrepanciaservices: DiscrepanciaServices, private downloadFile: DownloadFile, private spinner: NgxSpinnerService) { }
 
   mensajeValidacion: String = '';
   mensajeErrorService: String = '';
@@ -32,20 +33,24 @@ export class ReporteDiscrepanciasComponent implements OnInit {
     const validacionForm = this.validarCampos(fechIni, fechFin);
 
     if (validacionForm) {
-     //  this.consumirServicio(fechIni, fechFin);
-      this.discrepanciaservices.getData( fechIni , fechFin ).subscribe( data => {
+      this.spinner.show();
+      //  this.consumirServicio(fechIni, fechFin);
+      
+      this.discrepanciaservices.getData(fechIni, fechFin).subscribe(data => {
         console.log('/ftp/HIPOLITA/DEV/Discrepancias/' + data.nombreArchivo);
         // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
         // const url: string = 'http://localhost/Hipolitasitio/api/ServicesFiles/GetFile?pathRemoteFile=' +
         const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        '"/ftp/HIPOLITA/DEV/Discrepancias/' +
-         data.nombreArchivo + '"';
-         console.log(url);
+          '"/ftp/HIPOLITA/DEV/Discrepancias/' +
+          data.nombreArchivo + '"';
+        console.log(url);
         this.downloadFile.getFileDownload(url, 'csv');
+        this.spinner.hide();
       },
-      error => {
-        console.log('error', error);
-      });
+        error => {
+          console.log('error', error);
+          this.spinner.hide();
+        });
 
     }
   }
