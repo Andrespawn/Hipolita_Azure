@@ -21,6 +21,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AsignarGuiaMasterService } from './guia-master/asignarGuiaMaster.service';
 import { DocumentService } from './documento-importacion/document.service';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +37,7 @@ import { DocumentService } from './documento-importacion/document.service';
     ReporteDiscrepanciasComponent
   ],
   imports: [
+    NgxSpinnerModule,
     BrowserModule,
     HttpModule,
     HttpClientModule,

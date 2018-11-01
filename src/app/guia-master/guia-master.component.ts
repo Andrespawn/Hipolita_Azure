@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GuiaAsignacionInterface } from './asignacion';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-guia-master',
@@ -19,7 +20,9 @@ export class GuiaMasterComponent implements OnInit {
   mensajeSuccessMawb: String = '';
   mensajeErrorMawb: String = '';
   mensajeErrorService: String = '';
+  mensajeResponse: String = '';
 
+  mostrarMensajeResponse: Boolean = false;
   mostrarMensaje: Boolean = false;
   mostrarTbl: Boolean = false;
   mostrarBtnMAWB: Boolean = false;
@@ -28,7 +31,7 @@ export class GuiaMasterComponent implements OnInit {
   mostrarMenErrorMawb: Boolean = false;
   mostrarMenErrorService: Boolean = false;
 
-  constructor(private httpClient: HttpClient, private modalService: NgbModal) {
+  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService) {
 
   }
 
@@ -48,7 +51,7 @@ export class GuiaMasterComponent implements OnInit {
     this.mostrarBtnMAWB = false;
     this.mostrarMensajeMawb = false;
     this.mostrarMenSuccessMawb = false;
-    this.mostrarMenErrorService= false;
+    this.mostrarMenErrorService = false;
 
     const target = event.target;
     const fechaIni: Date = target.querySelector('#txtDateIni').value;
@@ -85,13 +88,24 @@ export class GuiaMasterComponent implements OnInit {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
+    this.spinner.show();
     //this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
     this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }/*{
       headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200', 'Content-Type': 'application/json' })
     }*/).subscribe(
       data => {
         this.guias = data;
-        this.mostrarTbl = true;
+        if (this.guias > 0) {
+          this.mostrarMensajeResponse = false;
+          this.mensajeResponse = null;
+          this.mostrarTbl = true;
+        } else {
+          this.mostrarMensajeResponse = true;
+          this.mensajeResponse = "No se encontraron resultados";
+          this.mostrarTbl = false;
+        }
+
+        this.spinner.hide();
 
       },
       error => {
@@ -99,7 +113,8 @@ export class GuiaMasterComponent implements OnInit {
         this.mostrarTbl = false;
         this.mostrarMenErrorService = true;
         this.mensajeErrorService = '' + error.message;
-        
+        this.spinner.hide();
+
       }
       );
   }
