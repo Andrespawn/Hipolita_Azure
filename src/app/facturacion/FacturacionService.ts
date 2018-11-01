@@ -11,7 +11,7 @@ export class FacturacionService {
   constructor(private httpClient: HttpClient) {
 
   }
-  getData( DateStart , DateEnd, fechadoc, tipo) {
+  getData( DateStart , DateEnd, tipo) {
       const headers = new HttpHeaders({'Content-Type': 'application/json',
       'SOrigenCliente': 'Hipolita',
       'Scanal': 'Hipolita',

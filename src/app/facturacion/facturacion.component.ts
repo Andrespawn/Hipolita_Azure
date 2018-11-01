@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { FacturacionService } from './FacturacionService';
 
 @Component({
   selector: 'app-facturacion',
@@ -15,7 +15,7 @@ export class FacturacionComponent implements OnInit {
   mostrarMensajeValidacion: Boolean = false;
   mensajeValidacion: String = '';
 
-  constructor(private spinner: NgxSpinnerService) { 
+  constructor(private spinner: NgxSpinnerService,private facturacionService: FacturacionService) { 
    }
 
   ngOnInit() {
@@ -40,9 +40,21 @@ export class FacturacionComponent implements OnInit {
     const target = event.target;
     const fechaFactura_ini: any = target.querySelector('#txtDateFactura_ini').value;
     const fechaFactura_fin: any = target.querySelector('#txtDateFactura_fin').value;
-    if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
+    
 
+    if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
+      this.spinner.show();
+      this.facturacionService.getData( fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe( data => {
+        console.log("Finish 1"+data);
+        this.spinner.hide();
+      },
+      error => {
+        console.log("Finish 2");
+        this.spinner.hide();
+      }
+      );
     }
+      
 
   }
   validarCampos(fechaInicio, fechaFin) {
