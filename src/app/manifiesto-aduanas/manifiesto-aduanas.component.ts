@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AduanasService } from './AduanasServices';
 import {DownloadFile} from '../Services/DownloadFile';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-manifiesto-aduanas',
   templateUrl: './manifiesto-aduanas.component.html',
@@ -10,9 +12,12 @@ import {DownloadFile} from '../Services/DownloadFile';
 export class ManifiestoAduanasComponent implements OnInit {
 
 msjValidacion: String = '';
-mostarMsjValidacion: Boolean = false;
+msjErrorService: String = '';
 
-  constructor( private aduanaService: AduanasService, private downloadFile: DownloadFile) { }
+mostarMsjValidacion: Boolean = false;
+mostarMsjErrorService: Boolean = false;
+
+  constructor( private aduanaService: AduanasService, private downloadFile: DownloadFile, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
   }
@@ -23,6 +28,7 @@ mostarMsjValidacion: Boolean = false;
     const target = event.target;
     const nroGuia: string = target.querySelector('#txtNroGuia').value;
     if (this.validarCampos(nroGuia)) {
+      this.spinner.show();
       this.aduanaService.getData( nroGuia ).subscribe( data => {
         console.log('/ftp/HIPOLITA/DEV/aduanas/' + data.archivoGenerado);
         // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
@@ -40,10 +46,17 @@ mostarMsjValidacion: Boolean = false;
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL); } );
         // **********funciona pdf) ******/
+        this.spinner.hide();
+        this.msjErrorService = null;
+        this.mostarMsjErrorService = false;
       },
       error => {
-        console.log('error', error);
-      });
+        this.spinner.hide();
+        this.mostarMsjErrorService =true;
+        this.msjErrorService = ""+error.message;
+      }
+      
+      );
     }
   }
 

@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#fff" type="ball-clip-rotate-pulse">
+    <br>
+    <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+
 <head>
     <title>Guía Master</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -74,18 +79,30 @@
                 <div style="font-size: 13px;">
                     {{msjValidacion}}
                 </div>
-                
+
             </div>
         </div>
 
-        <input type="text" placeholder="Número Guía Master" id="txtNroGuia" name="txtNroGuia" class="form-control" pattern="[0-9]{1,100}">
+        <div *ngIf="mostarMsjErrorService">
+            <div class="alert alert-danger" role="alert" style="text-align: center">
+                <strong>¡Error!</strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{msjErrorService}}
+                </div>
+
+            </div>
+        </div>
+
+        <input type="text" placeholder="Número Guía Master" id="txtNroGuia" name="txtNroGuia" class="form-control"
+            pattern="[0-9]{1,100}">
         <input type="submit" value="Generar Doc Aduanas" class="btn-primary ">
         <br>
         <br>
-        
+
     </form>
 
-    
+
 </body>
 
 </html>
