@@ -15,7 +15,7 @@ export class FacturacionComponent implements OnInit {
   mostrarMensajeValidacion: Boolean = false;
   mensajeValidacion: String = '';
 
-  constructor(, private spinner: NgxSpinnerService) { 
+  constructor(private spinner: NgxSpinnerService) { 
    }
 
   ngOnInit() {
