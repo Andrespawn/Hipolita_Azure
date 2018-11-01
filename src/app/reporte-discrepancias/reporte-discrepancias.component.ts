@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DiscrepanciaServices } from './DiscrepanciaServices';
+import {DownloadFile} from '../Services/DownloadFile';
 
 @Component({
   selector: 'app-reporte-discrepancias',
@@ -8,10 +10,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ReporteDiscrepanciasComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private discrepanciaservices: DiscrepanciaServices , private downloadFile: DownloadFile) { }
 
-  mensajeValidacion: String = "";
-  mensajeErrorService: String = "";
+  mensajeValidacion: String = '';
+  mensajeErrorService: String = '';
 
   mostrarMensajeValidacion: Boolean = false;
   mostrarMensajeErrorService: Boolean = false;
@@ -30,31 +32,41 @@ export class ReporteDiscrepanciasComponent implements OnInit {
     const validacionForm = this.validarCampos(fechIni, fechFin);
 
     if (validacionForm) {
-      this.consumirServicio(fechIni, fechFin);
-    } else {
+     //  this.consumirServicio(fechIni, fechFin);
+      this.discrepanciaservices.getData( fechIni , fechFin ).subscribe( data => {
+        console.log('/ftp/HIPOLITA/DEV/Discrepancias/' + data.nombreArchivo);
+        // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
+        // const url: string = 'http://localhost/Hipolitasitio/api/ServicesFiles/GetFile?pathRemoteFile=' +
+        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
+        '"/ftp/HIPOLITA/DEV/Discrepancias/' +
+         data.nombreArchivo + '"';
+         console.log(url);
+        this.downloadFile.getFileDownload(url, 'csv');
+      },
+      error => {
+        console.log('error', error);
+      });
 
     }
-
-
   }
 
   validarCampos(fechaInicio, fechaFin) {
 
-    if (fechaInicio == '' && fechaFin == '') {
+    if (fechaInicio === '' && fechaFin === '') {
 
-      this.mensajeValidacion = "Debe diligenciar la fecha de inicio y la fecha fin";
+      this.mensajeValidacion = 'Debe diligenciar la fecha de inicio y la fecha fin';
       this.mostrarMensajeValidacion = true;
       return false;
 
-    } else if (fechaInicio != '' && fechaFin == '') {
+    } else if (fechaInicio !== '' && fechaFin === '') {
 
-      this.mensajeValidacion = "Debe diligenciar la fecha fin";
+      this.mensajeValidacion = 'Debe diligenciar la fecha fin';
       this.mostrarMensajeValidacion = true;
       return false;
 
-    } else if (fechaInicio == '' && fechaFin != '') {
+    } else if (fechaInicio === '' && fechaFin !== '') {
 
-      this.mensajeValidacion = "Debe diligenciar la fecha inicio";
+      this.mensajeValidacion = 'Debe diligenciar la fecha inicio';
       this.mostrarMensajeValidacion = true;
       return false;
 
@@ -62,13 +74,13 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
       if (fechaInicio > fechaFin) {
 
-        this.mensajeValidacion = "La fecha inicio no debe ser mayor a la fecha fin.";
+        this.mensajeValidacion = 'La fecha inicio no debe ser mayor a la fecha fin.';
         this.mostrarMensajeValidacion = true;
         return false;
 
       } else {
 
-        this.mensajeValidacion = "";
+        this.mensajeValidacion = '';
         this.mostrarMensajeValidacion = false;
         return true;
 
@@ -77,7 +89,7 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
   }
 
-  consumirServicio(fechaInicio, fechaFin) {
+  /*consumirServicio(fechaInicio, fechaFin) {
 
 
     const headers = new HttpHeaders({
@@ -105,5 +117,5 @@ export class ReporteDiscrepanciasComponent implements OnInit {
       }
     );
 
-  }
+  }*/
 }

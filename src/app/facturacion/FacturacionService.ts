@@ -6,12 +6,12 @@ import { SPath } from '../Services/sPath';
 @Injectable({
   providedIn: 'root'
 })
-export class DocumentService {
+export class FacturacionService {
 
   constructor(private httpClient: HttpClient) {
 
   }
-  getData( nroDocImport , nroGuia, fechadoc) {
+  getData( DateStart , DateEnd, fechadoc, tipo) {
       const headers = new HttpHeaders({'Content-Type': 'application/json',
       'SOrigenCliente': 'Hipolita',
       'Scanal': 'Hipolita',
@@ -25,24 +25,16 @@ export class DocumentService {
 
     console.log(headers.get('Ocp-Apim-Subscription-Key'));
      // const body: String = '[{"Shipment_Number":"999031961893","Nro_DeclaracionImportacion":"44444","Date_Declaracion":"2018-09-21"}]';
-    const body: String = '[{"Shipment_Number":"' +
-    nroGuia + '","Nro_DeclaracionImportacion":"' +
-    nroDocImport + '","Date_Declaracion":"' +
-    fechadoc + '"}]';
+    const body: String = '{"request":  { "Date_start":"' +
+    DateStart + '","Date_end":"' +
+    DateEnd + '"}}' ;
      const json = JSON.stringify(body);
     console.log(body);
       // return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/DocImportacion', body, { headers });
-    return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/documentoimportacion/DocImportacion', body, { headers });
-    // return this.httpClient.post<SPath>('https://avapimgmtexpqa.azure-api.net/docImportacion', body, { headers });
-    /*.subscribe(
-      data => {
-        console.log(data);
-        return data;
-      },
-      error => {
-        console.log('error', error);
-        return null;
+      if (tipo === 'Facturacion Flete') {
+        return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/facturacionFlete', body, { headers });
+      } else {
+        return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/facturacionimpuestos', body, { headers });
       }
-    );*/
   }
 }

@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImpresionEtiquetaComponent implements OnInit {
 
-  mostrarMsgValidaciones: boolean = false;
-  mensajeValidacuines: string = "";
+  mostrarMsgValidaciones: Boolean = false;
+  mensajeValidacuines: String = '';
 
   constructor() { }
 
@@ -22,18 +22,18 @@ export class ImpresionEtiquetaComponent implements OnInit {
     const opcion: any = target.querySelector('#cmbOpcion').value;
     const nroGuia: any = target.querySelector('#txtNroGuia').value;
 
-    if (nroGuia == "" && opcion == "void") {
+    if (nroGuia === '' && opcion === 'void') {
       this.mostrarMsgValidaciones = true;
-      this.mensajeValidacuines = "Debe diligenciar número de guía y seleccionar una opción.";
-    } else if (nroGuia == "") {
+      this.mensajeValidacuines = 'Debe diligenciar número de guía y seleccionar una opción.';
+    } else if (nroGuia === '') {
       this.mostrarMsgValidaciones = true;
-      this.mensajeValidacuines = "Debe diligenciar el número de guía.";
-    } else if (opcion == "void") {
+      this.mensajeValidacuines = 'Debe diligenciar el número de guía.';
+    } else if (opcion === 'void') {
       this.mostrarMsgValidaciones = true;
-      this.mensajeValidacuines = "Debe seleccionar una opción.";
-    }else{
+      this.mensajeValidacuines = 'Debe seleccionar una opción.';
+    } else {
       this.mostrarMsgValidaciones = false;
-      this.mensajeValidacuines = "";
+      this.mensajeValidacuines = '';
     }
 
 

@@ -6,7 +6,7 @@ import { SPath } from '../Services/sPath';
 @Injectable({
   providedIn: 'root'
 })
-export class DocumentService {
+export class ImpresionService {
 
   constructor(private httpClient: HttpClient) {
 
@@ -32,17 +32,8 @@ export class DocumentService {
      const json = JSON.stringify(body);
     console.log(body);
       // return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/DocImportacion', body, { headers });
-    return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/documentoimportacion/DocImportacion', body, { headers });
-    // return this.httpClient.post<SPath>('https://avapimgmtexpqa.azure-api.net/docImportacion', body, { headers });
-    /*.subscribe(
-      data => {
-        console.log(data);
-        return data;
-      },
-      error => {
-        console.log('error', error);
-        return null;
-      }
-    );*/
+    return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/ReporteImpuestos/ReporteImpuestos',
+     body, { headers });
+
   }
 }

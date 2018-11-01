@@ -6,19 +6,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./facturacion.component.css']
 })
 export class FacturacionComponent implements OnInit {
+  selectedFactura: String = '';
+  facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
+  isChecked: Boolean = false;
+  tipoFactura: String;
+  mostrarMensajeValidacion: Boolean = false;
+  mensajeValidacion: String = '';
 
-  constructor() { }
+  constructor() {
+   }
 
   ngOnInit() {
 
   }
 
-  selectedFactura: string = '';
-  facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
-  isChecked: boolean = false;
-  tipoFactura: string;
-  mostrarMsgValidaciones: boolean = false;
-  mensajeValidacuines: string = "";
+
 
 
   radioCheked(event: any) {
@@ -34,26 +36,54 @@ export class FacturacionComponent implements OnInit {
     event.preventDefault();
 
     const target = event.target;
-    const fechaFactura: any = target.querySelector('#txtDateFactura').value;
+    const fechaFactura_ini: any = target.querySelector('#txtDateFactura_ini').value;
+    const fechaFactura_fin: any = target.querySelector('#txtDateFactura_fin').value;
+    if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
 
+    }
 
-    if (!this.isChecked && fechaFactura == "") {
+  }
+  validarCampos(fechaInicio, fechaFin) {
+    if (!this.isChecked) {
+      this.mostrarMensajeValidacion = true;
+      this.mensajeValidacion = 'Debe seleccionar un tipo de factura.';
+      return false;
+    }
+    if (fechaInicio === '' && fechaFin === '') {
 
-      this.mostrarMsgValidaciones = true;
-      this.mensajeValidacuines = "Debe seleccionar un tipo de factura y diligenciar la fecha de facturación.";
+      this.mensajeValidacion = 'Debe diligenciar la fecha de inicio y la fecha fin';
+      this.mostrarMensajeValidacion = true;
+      return false;
+
+    } else if (fechaInicio !== '' && fechaFin === '') {
+
+      this.mensajeValidacion = 'Debe diligenciar la fecha fin';
+      this.mostrarMensajeValidacion = true;
+      return false;
+
+    } else if (fechaInicio === '' && fechaFin !== '') {
+
+      this.mensajeValidacion = 'Debe diligenciar la fecha inicio';
+      this.mostrarMensajeValidacion = true;
+      return false;
+
     } else {
-      if (!this.isChecked) {
-        this.mostrarMsgValidaciones = true;
-        this.mensajeValidacuines = "Debe seleccionar un tipo de factura.";
 
-      } else if (fechaFactura == "") {
-        this.mostrarMsgValidaciones = true;
-        this.mensajeValidacuines = "Debe diligenciar la fecha de facturación.";
+      if (fechaInicio > fechaFin) {
+
+        this.mensajeValidacion = 'La fecha inicio no debe ser mayor a la fecha fin.';
+        this.mostrarMensajeValidacion = true;
+        return false;
+
       } else {
-        this.mostrarMsgValidaciones = false;
-        this.mensajeValidacuines = "";
+
+        this.mensajeValidacion = '';
+        this.mostrarMensajeValidacion = false;
+        return true;
+
       }
     }
+
 
   }
 
