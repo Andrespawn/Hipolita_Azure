@@ -66,12 +66,16 @@ export class GuiaMasterComponent implements OnInit {
       if (fechasValidas) {
 
         this.consumirServicio(nroGuia, fechaIni, fechaFin);
-
+        target.querySelector('#txtDateIni').value = ""
+        target.querySelector('#txtDateFin').value = "";
+        target.querySelector('#txtNroGuia').value = "";
       }
     }
   }
 
   consumirServicio(numGuia, fechaI, fechaF) {
+
+    this.guias = null;
 
     var body: GuiaAsignacionInterface = {
       Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: "", Date_GuiaMaster: ""
@@ -95,7 +99,7 @@ export class GuiaMasterComponent implements OnInit {
     }*/).subscribe(
       data => {
         this.guias = data;
-        if (this.guias > 0) {
+        if (this.guias != null) {
           this.mostrarMensajeResponse = false;
           this.mensajeResponse = null;
           this.mostrarTbl = true;
@@ -104,7 +108,6 @@ export class GuiaMasterComponent implements OnInit {
           this.mensajeResponse = "No se encontraron resultados";
           this.mostrarTbl = false;
         }
-
         this.spinner.hide();
 
       },
