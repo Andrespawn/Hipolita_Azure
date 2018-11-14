@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SPath } from '../Services/sPath';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
+
+import { SEtiqueta } from '../Services/sEtiqueta';
 
 
 @Injectable({
@@ -11,29 +12,28 @@ export class ImpresionService {
   constructor(private httpClient: HttpClient) {
 
   }
-  getData( nroDocImport , nroGuia, fechadoc) {
+  getData( tipo , nroGuia) {
       const headers = new HttpHeaders({'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
       'SOrigenCliente': 'Hipolita',
       'Scanal': 'Hipolita',
       'SUsuario': 'Hipolita',
-      // 'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
-       // 'Ocp-Apim-Subscription-Key': '5a14178462d24ca39fc93398ee444a91',
-       'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
-
     console.log(headers.get('Ocp-Apim-Subscription-Key'));
-     // const body: String = '[{"Shipment_Number":"999031961893","Nro_DeclaracionImportacion":"44444","Date_Declaracion":"2018-09-21"}]';
-    const body: String = '[{"Shipment_Number":"' +
-    nroGuia + '","Nro_DeclaracionImportacion":"' +
-    nroDocImport + '","Date_Declaracion":"' +
-    fechadoc + '"}]';
-     const json = JSON.stringify(body);
+    const body: String = '{ "ETIQUETAS":[{ "NRO_CONSULTAR":"' + nroGuia + '", "TIPO":"' + tipo + '" } ] }' ;
     console.log(body);
-      // return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/DocImportacion', body, { headers });
-    return this.httpClient.post<SPath>('https://az-am-exp-use-dev.azure-api.net/guiamaster/ReporteImpuestos/ReporteImpuestos',
-     body, { headers });
-
+    return this.httpClient.post<SEtiqueta>('https://az-am-exp-use-dev.azure-api.net/Etiqueta/impEtiqueta2', body, { headers });
+    /*.subscribe(data => {
+        console.log(data);
+         },
+         error => {
+          /* this.spinner.hide();
+           this.mostrarMensajeErrorService = true;
+           this.mensajeAlertaErrorService = '' + error.message;
+           console.log('error', error.menssage());
+           this.spinner.hide(););
+      });*/
   }
 }

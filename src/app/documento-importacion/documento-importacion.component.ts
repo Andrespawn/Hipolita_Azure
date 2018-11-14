@@ -20,7 +20,8 @@ export class DocumentoImportacionComponent implements OnInit {
   mensajeAlertaValidacionForm: String = '';
   mensajeAlertaErrorService: String = '';
 
-  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient, private spinner: NgxSpinnerService) {
+  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient,
+     private spinner: NgxSpinnerService) {
   }
 
   ngOnInit() {

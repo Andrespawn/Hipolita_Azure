@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FacturacionService } from './FacturacionService';
+import { DownloadFile } from '../Services/DownloadFile';
 
 @Component({
   selector: 'app-facturacion',
@@ -15,7 +16,7 @@ export class FacturacionComponent implements OnInit {
   mostrarMensajeValidacion: Boolean = false;
   mensajeValidacion: String = '';
 
-  constructor(private spinner: NgxSpinnerService,private facturacionService: FacturacionService) { 
+  constructor(private spinner: NgxSpinnerService, private facturacionService: FacturacionService, private downloadFile: DownloadFile) {
    }
 
   ngOnInit() {
@@ -40,21 +41,27 @@ export class FacturacionComponent implements OnInit {
     const target = event.target;
     const fechaFactura_ini: any = target.querySelector('#txtDateFactura_ini').value;
     const fechaFactura_fin: any = target.querySelector('#txtDateFactura_fin').value;
-    
-
     if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
       this.spinner.show();
       this.facturacionService.getData( fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe( data => {
-        console.log("Finish 1"+data);
+        console.log('Finish 1' + data);
+        console.log('/ftp/HIPOLITA/DEV/Facturacion/' + data.fileName);
+        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
+          '"/ftp/HIPOLITA/DEV/Facturacion/' +
+          data.fileName + '"';
+        console.log(url);
+        // this.httpClient.get(url).subscribe();
+        // window.open(url, '_blank', '');
+        this.downloadFile.getFileDownload(url, 'pdf');
+
         this.spinner.hide();
       },
       error => {
-        console.log("Finish 2");
+        console.log('Finish 2');
         this.spinner.hide();
       }
       );
     }
-      
 
   }
   validarCampos(fechaInicio, fechaFin) {

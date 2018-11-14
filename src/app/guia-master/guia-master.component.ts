@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GuiaAsignacionInterface } from './asignacion';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
 import { NgxSpinnerService } from 'ngx-spinner';
+import { strictEqual } from 'assert';
 
 @Component({
   selector: 'app-guia-master',
@@ -73,35 +73,37 @@ export class GuiaMasterComponent implements OnInit {
 
   consumirServicio(numGuia, fechaI, fechaF) {
 
-    var body: GuiaAsignacionInterface = {
-      Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: "", Date_GuiaMaster: ""
+    const body: GuiaAsignacionInterface = {
+      Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: '', Date_GuiaMaster: ''
     };
 
-    var json = JSON.stringify(body);
+    const json = JSON.stringify(body);
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'SOrigenCliente': 'a',
-      'Scanal': 'a',
-      'SUsuario': 'a',
+      'SOrigenCliente': 'Hipolita',
+      'Scanal': 'Hipolita',
+      'SUsuario': 'Hipolita',
       'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
     this.spinner.show();
-    //this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
+    console.log(json);
+    // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
     this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }/*{
       headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200', 'Content-Type': 'application/json' })
     }*/).subscribe(
       data => {
         this.guias = data;
-        if (this.guias > 0) {
+        console.log(this.guias);
+        if (this.guias !== null) {
           this.mostrarMensajeResponse = false;
           this.mensajeResponse = null;
           this.mostrarTbl = true;
         } else {
           this.mostrarMensajeResponse = true;
-          this.mensajeResponse = "No se encontraron resultados";
+          this.mensajeResponse = 'No se encontraron resultados';
           this.mostrarTbl = false;
         }
 
@@ -121,12 +123,12 @@ export class GuiaMasterComponent implements OnInit {
 
   getSelectGuiaMaster(uss, isChecked) {
     console.log(uss);
-    console.log(isChecked);
+    // console.log(isChecked);
     if (isChecked) {
       this.listGuias.push(uss);
     } else {
       for (let i = 0; i < this.listGuias.length; i++) {
-        if (uss == this.listGuias[i]) {
+        if (uss === this.listGuias[i]) {
           this.listGuias.splice(i, 1);
         }
       }
@@ -138,7 +140,7 @@ export class GuiaMasterComponent implements OnInit {
       this.mostrarBtnMAWB = false;
     }
 
-    console.log(this.listGuias);
+   // console.log(this.listGuias);
   }
 
   validarCampos(fecIni, fecFin, nroG) {
@@ -155,18 +157,18 @@ export class GuiaMasterComponent implements OnInit {
   validarFechas(fecIni, fecFin) {
 
     if (fecIni !== '' && fecFin === '') {
-      this.mensajeAlerta = this.mensajeAlerta + "Debe diligenciar fecha fin. ";
+      this.mensajeAlerta = this.mensajeAlerta + 'Debe diligenciar fecha fin. ';
       this.mostrarMensaje = true;
       return false;
-    } else if (fecIni == "" && fecFin != "") {
-      this.mensajeAlerta = this.mensajeAlerta + "Debe diligenciar fecha inicio. ";
+    } else if (fecIni == '' && fecFin != '') {
+      this.mensajeAlerta = this.mensajeAlerta + 'Debe diligenciar fecha inicio. ';
       this.mostrarMensaje = true;
       return false;
     }
 
 
     if (fecIni > fecFin) {
-      this.mensajeAlerta = this.mensajeAlerta + "Fecha inicio debe ser menos a la fecha fin. ";
+      this.mensajeAlerta = this.mensajeAlerta + 'Fecha inicio debe ser menos a la fecha fin. ';
       this.mostrarMensaje = true;
       return false;
 
@@ -179,7 +181,7 @@ export class GuiaMasterComponent implements OnInit {
 
   actualizarGuias(event) {
     event.preventDefault();
-    this.mensajeAlertaMawb = "";
+    this.mensajeAlertaMawb = '';
     this.mostrarMensajeMawb = false;
 
     const target = event.target;
@@ -198,11 +200,11 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   validarCamposMawb(varNroMawb, varFechMawb) {
-    if (varNroMawb != "" || varFechMawb != "") {
+    if (varNroMawb !== '' || varFechMawb !== '') {
       console.log(varNroMawb, varFechMawb);
       return true;
     } else {
-      this.mensajeAlertaMawb = this.mensajeAlertaMawb + "Debe diligenciar los campos 'Nro de MAWB' y 'Fecha de MAWB'. ";
+      this.mensajeAlertaMawb = this.mensajeAlertaMawb + 'Debe diligenciar los campos "Nro de MAWB" y "Fecha de MAWB". ';
       this.mostrarMensajeMawb = true;
       return false;
     }
@@ -210,53 +212,65 @@ export class GuiaMasterComponent implements OnInit {
 
   consumirServiciodos(varNroMawb, varFechMawb) {
     var body: GuiaAsignacionInterface = {
-      Date_start: "", Date_end: "", Consulta: false, Guia_Alertran: this.listGuias, Nro_GuiaMaster: varNroMawb, Date_GuiaMaster: varFechMawb
+      Date_start: '', Date_end: '', Consulta: false, Guia_Alertran: this.listGuias, Nro_GuiaMaster: varNroMawb, Date_GuiaMaster: varFechMawb
     };
 
     var json = JSON.stringify(body);
+    console.log(json);
+    console.log(this.listGuias);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'SOrigenCliente': 'Hipolita',
+      'Scanal': 'Hipolita',
+      'SUsuario': 'Hipolita',
+      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
+    });
+    this.spinner.show();
 
-    this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-      //  this.httpClient.post('https://avapimgmtexpqa.azure-api.net/GuiaMaster/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-      //  headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'https://azrav-webapp-tst28.azurewebsites.net', 'Content-Type': 'application/json' })
-      //headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200', 'Content-Type': 'application/json' })
-    }).subscribe(
+    // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
+       this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }
+      //  headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'https://azrav-webapp-tst28.azurewebsites.net',
+      // 'Content-Type': 'application/json' })
+      // headers: new HttpHeaders({'Content-Type': 'application/json' })
+    ).subscribe(
       data => {
-        this.mensajeAlerta = "";
-        this.mensajeAlertaMawb = "";
+        this.mensajeAlerta = '';
+        this.mensajeAlertaMawb = '';
 
-        this.mostrarMensaje = false;;
+        this.mostrarMensaje = false;
         this.mostrarTbl = false;
         this.mostrarBtnMAWB = false;
         this.mostrarMensajeMawb = false;
-
-        this.guias = null;
-        this.mensajeSuccessMawb = "Guia(s) Actualizada(s)";
+        this.listGuias = [];
+        // this.guias = null;
+        this.mensajeSuccessMawb = 'Guia(s) Actualizada(s)';
         this.mostrarMenSuccessMawb = true;
         this.mostrarBtnMAWB = false;
         this.mostrarMenErrorMawb = false;
-
         this.modalService.dismissAll();
+        this.spinner.hide();
       },
       error => {
-        this.mensajeAlerta = "";
-        this.mensajeAlertaMawb = "";
+        this.mensajeAlerta = '';
+        this.mensajeAlertaMawb = '';
 
-        this.mostrarMensaje = false;;
+        this.mostrarMensaje = false;
         this.mostrarTbl = false;
         this.mostrarBtnMAWB = false;
         this.mostrarMensajeMawb = false;
 
-        this.guias = null;
-        this.mensajeSuccessMawb = "";
+        this.listGuias = [];
+        this.mensajeSuccessMawb = '';
         this.mostrarMenSuccessMawb = false;
         this.mostrarBtnMAWB = false;
-
-
-        console.log("error ", error);
+        console.log('error ', error);
         this.mensajeErrorMawb = error.message;
         this.mostrarMenErrorMawb = true;
 
         this.modalService.dismissAll();
+        this.spinner.hide();
       }
     );
 
@@ -269,7 +283,7 @@ export class GuiaMasterComponent implements OnInit {
   closeResult: string;
 
   open(content) {
-    this.mensajeAlertaMawb = "";
+    this.mensajeAlertaMawb = '';
     this.mostrarMensajeMawb = false;
     event.preventDefault();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
