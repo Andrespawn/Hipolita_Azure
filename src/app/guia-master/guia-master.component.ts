@@ -12,7 +12,8 @@ import { strictEqual } from 'assert';
 })
 export class GuiaMasterComponent implements OnInit {
 
-  guias: Object = [];
+  guias: { varCheck: boolean, client_reference: string, Shipment_number: string, guiamaster: string, guiamasterdate: string }[] = [];
+
   listGuias: String[] = [];
 
   mensajeAlerta: String = '';
@@ -21,6 +22,8 @@ export class GuiaMasterComponent implements OnInit {
   mensajeErrorMawb: String = '';
   mensajeErrorService: String = '';
   mensajeResponse: String = '';
+
+  varChecked;
 
   mostrarMensajeResponse: Boolean = false;
   mostrarMensaje: Boolean = false;
@@ -69,6 +72,12 @@ export class GuiaMasterComponent implements OnInit {
 
       }
     }
+
+    if (this.guias === null) {
+      target.querySelector('#txtDateIni').value = null;
+      target.querySelector('#txtDateFin').value = null;
+      target.querySelector('#txtNroGuia').value = null;
+    }
   }
 
   consumirServicio(numGuia, fechaI, fechaF) {
@@ -91,16 +100,20 @@ export class GuiaMasterComponent implements OnInit {
     this.spinner.show();
     console.log(json);
     // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-    this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }/*{
+    this.httpClient.post<any>('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }/*{
       headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200', 'Content-Type': 'application/json' })
     }*/).subscribe(
       data => {
         this.guias = data;
-        console.log(this.guias);
+        for (let index in this.guias) {
+          this.guias[index].varCheck = false;
+        }
+
         if (this.guias !== null) {
           this.mostrarMensajeResponse = false;
           this.mensajeResponse = null;
           this.mostrarTbl = true;
+          console.log("OKK", this.guias);
         } else {
           this.mostrarMensajeResponse = true;
           this.mensajeResponse = 'No se encontraron resultados';
@@ -140,7 +153,7 @@ export class GuiaMasterComponent implements OnInit {
       this.mostrarBtnMAWB = false;
     }
 
-   // console.log(this.listGuias);
+    // console.log(this.listGuias);
   }
 
   validarCampos(fecIni, fecFin, nroG) {
@@ -230,7 +243,7 @@ export class GuiaMasterComponent implements OnInit {
     this.spinner.show();
 
     // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-       this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }
+    this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }
       //  headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'https://azrav-webapp-tst28.azurewebsites.net',
       // 'Content-Type': 'application/json' })
       // headers: new HttpHeaders({'Content-Type': 'application/json' })
@@ -303,4 +316,27 @@ export class GuiaMasterComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
+
+  checkedAll(isChecked) {
+
+    if (isChecked) {
+      for (let obj in this.guias) {
+        this.guias[obj].varCheck = true;
+        this.listGuias.push(this.guias[obj].Shipment_number);
+      }
+      console.log(this.listGuias);
+
+    }else{
+      for (let obj in this.guias) {
+        this.guias[obj].varCheck = false;
+        this.listGuias = [];
+        
+      }
+      console.log(this.listGuias);
+    }
+  }
+
 }
+
+

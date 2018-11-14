@@ -128,7 +128,7 @@
         <input type="submit" value="Buscar" class="btn-primary ">
         <br>
         <br>
-        <table role="table" *ngIf="mostrarTbl" class="table">
+        <!--<table role="table" *ngIf="mostrarTbl" style="margin-left:auto;margin-right:auto">
             <thead role="rowgroup">
                 <tr role="row">
                     <th role="columnheader"></th>
@@ -150,13 +150,38 @@
                     <td role="cell">{{guia.guiamasterdate}}</td>
                 </tr>
             </tbody>
-        </table>
+        </table>-->
         <br>
         <div *ngIf="mostrarBtnMAWB">
             <input type="submit" value="Asignar MAWB" class="btn-info" (click)="open(content)">
 
         </div>
     </form>
+
+    <table role="table" *ngIf="mostrarTbl" style="margin-left:auto;margin-right:auto">
+        <thead role="rowgroup">
+            <tr role="row">
+                <th role="columnheader"><input type="checkbox" name="radioAll" (change)="checkedAll($event.target.checked)"></th>
+                <th role="columnheader">TrackingId</th>
+                <th role="columnheader">Guía Alertan</th>
+                <th role="columnheader">MAWB</th>
+                <th role="columnheader">Date MAWB</th>
+            </tr>
+        </thead>
+
+        <tbody role="rowgroup" *ngFor="let guia of guias">
+            <tr role="row">
+                <td role="cell">
+                    
+                    <input type="checkbox" name="optradio" [checked]="guia.varCheck" (change)="getSelectGuiaMaster(guia.Shipment_number,$event.target.checked)" >
+                </td>
+                <td role="cell">{{guia.client_reference}}</td>
+                <td role="cell">{{guia.Shipment_number}}</td>
+                <td role="cell">{{guia.guiamaster}}</td>
+                <td role="cell">{{guia.guiamasterdate}}</td>
+            </tr>
+        </tbody>
+    </table>
 
     <ng-template #content let-modal>
         <div class="modal-header">
