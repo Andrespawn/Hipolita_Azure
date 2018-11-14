@@ -153,6 +153,7 @@ export class GuiaMasterComponent implements OnInit {
       this.mostrarBtnMAWB = false;
     }
 
+    console.log("",this.mostrarBtnMAWB);
     // console.log(this.listGuias);
   }
 
@@ -325,7 +326,7 @@ export class GuiaMasterComponent implements OnInit {
         this.guias[obj].varCheck = true;
         this.listGuias.push(this.guias[obj].Shipment_number);
       }
-      console.log(this.listGuias);
+      //console.log(this.listGuias);
 
     }else{
       for (let obj in this.guias) {
@@ -333,7 +334,14 @@ export class GuiaMasterComponent implements OnInit {
         this.listGuias = [];
         
       }
-      console.log(this.listGuias);
+      //console.log(this.listGuias);
+    }
+
+
+    if (this.listGuias.length > 0) {
+      this.mostrarBtnMAWB = true;
+    } else {
+      this.mostrarBtnMAWB = false;
     }
   }
 
