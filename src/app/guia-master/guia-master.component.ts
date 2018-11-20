@@ -81,7 +81,7 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   consumirServicio(numGuia, fechaI, fechaF) {
-
+ 
     const body: GuiaAsignacionInterface = {
       Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: '', Date_GuiaMaster: ''
     };
@@ -113,7 +113,7 @@ export class GuiaMasterComponent implements OnInit {
           this.mostrarMensajeResponse = false;
           this.mensajeResponse = null;
           this.mostrarTbl = true;
-          console.log("OKK", this.guias);
+          console.log("OK", this.guias);
         } else {
           this.mostrarMensajeResponse = true;
           this.mensajeResponse = 'No se encontraron resultados';
@@ -218,7 +218,7 @@ export class GuiaMasterComponent implements OnInit {
       console.log(varNroMawb, varFechMawb);
       return true;
     } else {
-      this.mensajeAlertaMawb = this.mensajeAlertaMawb + 'Debe diligenciar los campos "Nro de MAWB" y "Fecha de MAWB". ';
+      this.mensajeAlertaMawb = this.mensajeAlertaMawb + 'Debe diligenciar los campos "Numero de MAWB" y "Fecha de MAWB". ';
       this.mostrarMensajeMawb = true;
       return false;
     }

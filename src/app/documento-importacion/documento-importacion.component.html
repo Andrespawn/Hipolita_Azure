@@ -12,15 +12,12 @@
 
     <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -32,7 +29,7 @@
             </button>
             <div class="desplegado-contenido">
                 <a routerLink="/guiaMaster">Guía Master</a>
-                <a routerLink="/manifiestoAduanas">Manifiesto Aduanas</a>
+                <a routerLink="/manifiestoAduanas">Xml Aduanas</a>
             </div>
         </div>
         <div class="desplegable">
@@ -40,7 +37,7 @@
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="desplegado-contenido">
-                <a routerLink="/documentoImportacion">Documento Importacion</a>
+                <a routerLink="/documentoImportacion">Declaración de Importación</a>
             </div>
         </div>
         <div class="desplegable">
@@ -70,7 +67,7 @@
     </div>
     <!--<router-outlet></router-outlet>-->
     <form (submit)="buscarRuta($event)">
-        <h4>Documento Declaración importación</h4>
+        <h4>Declaración de Importación</h4>
 
         <div *ngIf="mostrarMensajeValidacionForm">
             <div class="alert alert-warning " role="alert" style="text-align: center">
@@ -96,14 +93,13 @@
 
 
 
-        <input type="text" placeholder="Fecha Ingreso" name="txtDate" id="txtDate" class="form-control" bsDatepicker
-            [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
+        <input type="text" placeholder="Fecha Manifesto Importación" name="txtDate" id="txtDate" class="form-control" bsDatepicker [bsConfig]="{containerClass:'theme-red',dateInputFormat: 'YYYY/MM/DD'}" pattern="[0-9]{4}/(0[1-9]|1[012])/(0[1-9]|1[0-9]|2[0-9]|3[01])">
 
-        <input type="text" placeholder="Nro documento importacion" id="nroDocImport" id="nroDocImport" class="form-control">
+        <input type="text" placeholder="Número Manifesto Importacion" id="nroDocImport" id="nroDocImport" class="form-control">
 
-        <input type="text" placeholder="Nro guía alertan" id="nroGuiaAlert" id="nroGuiaAlert" class="form-control">
+        <input type="text" placeholder="Numero Guia Hija" id="nroGuiaAlert" id="nroGuiaAlert" class="form-control">
 
-        <input type="submit" value="Generar Doc" class="btn-primary ">
+        <input type="submit" value="Generar Declaración Importación" class="btn-primary ">
 
     </form>
 
