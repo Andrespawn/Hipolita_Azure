@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AduanasService } from './AduanasServices';
-import {DownloadFile} from '../Services/DownloadFile';
+import { DownloadFile } from '../Services/DownloadFile';
 
 import { NgxSpinnerService } from 'ngx-spinner';
+
+import { ConfigService } from '../ReadConfig/read-config';
 
 @Component({
   selector: 'app-manifiesto-aduanas',
@@ -11,13 +13,19 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class ManifiestoAduanasComponent implements OnInit {
 
-msjValidacion: String = '';
-msjErrorService: String = '';
+  msjValidacion: String = '';
+  msjErrorService: String = '';
 
-mostarMsjValidacion: Boolean = false;
-mostarMsjErrorService: Boolean = false;
+  mostarMsjValidacion: Boolean = false;
+  mostarMsjErrorService: Boolean = false;
 
-  constructor( private aduanaService: AduanasService, private downloadFile: DownloadFile, private spinner: NgxSpinnerService) { }
+  urlDownload: any;
+  urlFTP: any;
+
+  constructor(private aduanaService: AduanasService, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_ADUANAS_DOWNLOAD'];
+    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_ADUANAS_FTP'];
+  }
 
   ngOnInit() {
   }
@@ -27,49 +35,48 @@ mostarMsjErrorService: Boolean = false;
 
     const target = event.target;
     const nroGuia: string = target.querySelector('#txtNroGuia').value;
+
     if (this.validarCampos(nroGuia)) {
+
       this.spinner.show();
-      this.aduanaService.getData( nroGuia ).subscribe( data => {
-        console.log('/ftp/HIPOLITA/DEV/aduanas/' + data.archivoGenerado);
-        // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        // const url: string = 'http://localhost/Hipolitasitio/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        '"/ftp/HIPOLITA/DEV/aduanas/' +
-         data.archivoGenerado + '"';
-         console.log(url);
-        // this.httpClient.get(url).subscribe();
-        // window.open(url, '_blank', '');
+
+      this.aduanaService.getData(nroGuia).subscribe(data => {
+
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.archivoGenerado + '"';
+
         this.downloadFile.getFileDownload(url, 'xml');
-        /* **********funciona pdf) *****
+
+        /***********funciona pdf) *****
           this.getPDF(url).subscribe((response) => {
           const file = new Blob([response], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL); } );
-        // **********funciona pdf) ******/
+        **********funciona pdf) ******/
+
         this.spinner.hide();
         this.msjErrorService = null;
         this.mostarMsjErrorService = false;
+
       },
-      error => {
-        this.spinner.hide();
-        this.mostarMsjErrorService =true;
-        this.msjErrorService = ""+error.message;
-      }
-      
+        error => {
+          this.spinner.hide();
+          this.mostarMsjErrorService = true;
+          this.msjErrorService = "" + error.message;
+        }
       );
     }
   }
 
   validarCampos(nroGuia) {
-      if (nroGuia === '') {
-        this.msjValidacion = 'Debe diligenciar el campo Número Guía Master.';
-        this.mostarMsjValidacion = true;
-        return false;
-      } else {
-        this.msjValidacion = '';
-        this.mostarMsjValidacion = false;
-        return true;
-      }
+    if (nroGuia === '') {
+      this.msjValidacion = 'Debe diligenciar el campo Número Guía Master.';
+      this.mostarMsjValidacion = true;
+      return false;
+    } else {
+      this.msjValidacion = '';
+      this.mostarMsjValidacion = false;
+      return true;
+    }
   }
 
 }
