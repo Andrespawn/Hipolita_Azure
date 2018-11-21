@@ -3,6 +3,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FacturacionService } from './FacturacionService';
 import { DownloadFile } from '../Services/DownloadFile';
 
+import { ConfigService } from '../ReadConfig/read-config';
+
 @Component({
   selector: 'app-facturacion',
   templateUrl: './facturacion.component.html',
@@ -16,15 +18,17 @@ export class FacturacionComponent implements OnInit {
   mostrarMensajeValidacion: Boolean = false;
   mensajeValidacion: String = '';
 
-  constructor(private spinner: NgxSpinnerService, private facturacionService: FacturacionService, private downloadFile: DownloadFile) {
-   }
+  urlDownload: any;
+  urlFTP: any;
+
+  constructor(private spinner: NgxSpinnerService, private facturacionService: FacturacionService, private downloadFile: DownloadFile, private configService: ConfigService) {
+    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_FACTURACION_DOWNLOAD'];
+    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_FACTURACION_FTP'];
+  }
 
   ngOnInit() {
 
   }
-
-
-
 
   radioCheked(event: any) {
 
@@ -43,23 +47,16 @@ export class FacturacionComponent implements OnInit {
     const fechaFactura_fin: any = target.querySelector('#txtDateFactura_fin').value;
     if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
       this.spinner.show();
-      this.facturacionService.getData( fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe( data => {
-        console.log('Finish 1' + data);
-        console.log('/ftp/HIPOLITA/DEV/Facturacion/' + data.fileName);
-        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
-          '"/ftp/HIPOLITA/DEV/Facturacion/' +
-          data.fileName + '"';
-        console.log(url);
-        // this.httpClient.get(url).subscribe();
-        // window.open(url, '_blank', '');
+      this.facturacionService.getData(fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe(data => {
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
         this.downloadFile.getFileDownload(url, 'pdf');
 
         this.spinner.hide();
       },
-      error => {
-        console.log('Finish 2');
-        this.spinner.hide();
-      }
+        error => {
+          console.log('Finish 2');
+          this.spinner.hide();
+        }
       );
     }
 
