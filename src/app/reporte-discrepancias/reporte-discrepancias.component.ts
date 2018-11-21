@@ -4,6 +4,8 @@ import { DiscrepanciaServices } from './DiscrepanciaServices';
 import { DownloadFile } from '../Services/DownloadFile';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { ConfigService } from '../ReadConfig/read-config';
+
 @Component({
   selector: 'app-reporte-discrepancias',
   templateUrl: './reporte-discrepancias.component.html',
@@ -11,7 +13,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class ReporteDiscrepanciasComponent implements OnInit {
 
-  constructor(private discrepanciaservices: DiscrepanciaServices, private downloadFile: DownloadFile, private spinner: NgxSpinnerService) { }
+  urlDownload: any;
+  urlFTP: any;
+
+  constructor(private discrepanciaservices: DiscrepanciaServices, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) { 
+    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_DOWNLOAD'];
+    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_FTP'];
+  }
 
   mensajeValidacion: String = '';
   mensajeErrorService: String = '';
@@ -34,16 +42,10 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
     if (validacionForm) {
       this.spinner.show();
-      //  this.consumirServicio(fechIni, fechFin);
-      
+
       this.discrepanciaservices.getData(fechIni, fechFin).subscribe(data => {
-        console.log('/ftp/HIPOLITA/DEV/Discrepancias/' + data.nombreArchivo);
-        // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        // const url: string = 'http://localhost/Hipolitasitio/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
-          '"/ftp/HIPOLITA/DEV/Discrepancias/' +
-          data.nombreArchivo + '"';
-        console.log(url);
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.nombreArchivo + '"';
+
         this.downloadFile.getFileDownload(url, 'csv');
         this.spinner.hide();
       },

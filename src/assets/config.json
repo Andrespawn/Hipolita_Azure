@@ -12,10 +12,7 @@
     "URL_FACTURACION_IMPUESTO_SERVICE":"https://az-am-exp-use-dev.azure-api.net/guiamaster/facturacionimpuestos",
     "URL_FACTURACION_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
     "URL_FACTURACION_FTP":"/ftp/HIPOLITA/DEV/Facturacion/",
-
-    "URL_DOC_IMPORTACION":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
-    "URL_IMPRESION_ETIQUETA":"http://localhost/Hipolita/api/Etiqueta?nro_Consultar=",
-    "URL_FACTURACION_FLETE":"httpshttps://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
-    "URL_FACTURACION_IMPUESTOS":"httpshttps://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
-    "URL_REPO_DISCREPANCIAS":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile="
+    "URL_REPO_DISCREPANCIAS_SERVICE":"https://az-am-exp-use-dev.azure-api.net/guiamaster/reporteDiscrepancia",
+    "URL_REPO_DISCREPANCIAS_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
+    "URL_REPO_DISCREPANCIAS_FTP":"/ftp/HIPOLITA/DEV/Discrepancias/"
 }
