@@ -23,6 +23,7 @@ import { DocumentService } from './documento-importacion/document.service';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 
+import { ConfigService } from './ReadConfig/read-config';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,14 @@ import { NgxSpinnerModule } from 'ngx-spinner';
       ]
     )
   ],
-  providers: [HttpClient, HttpModule, AsignarGuiaMasterService, DocumentService],
+  providers: [
+    HttpClient, 
+    HttpModule, 
+    AsignarGuiaMasterService, 
+    DocumentService, 
+    DocumentService,
+    ConfigService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

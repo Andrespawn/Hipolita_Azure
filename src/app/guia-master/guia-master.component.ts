@@ -4,6 +4,7 @@ import { GuiaAsignacionInterface } from './asignacion';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { strictEqual } from 'assert';
+import { ConfigService } from '../ReadConfig/read-config';
 
 @Component({
   selector: 'app-guia-master',
@@ -34,8 +35,10 @@ export class GuiaMasterComponent implements OnInit {
   mostrarMenErrorMawb: Boolean = false;
   mostrarMenErrorService: Boolean = false;
 
-  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService) {
+  urlService: any;
 
+  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    this.urlService = configService.loadJSON('./assets/config.json')['URL_GUIA_MASTER'];
   }
 
   ngOnInit() {
