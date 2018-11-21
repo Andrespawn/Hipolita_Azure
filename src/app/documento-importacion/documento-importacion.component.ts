@@ -8,6 +8,8 @@ import { ifError } from 'assert';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { ConfigService } from '../ReadConfig/read-config';
+
 @Component({
   selector: 'app-documento-importacion',
   templateUrl: './documento-importacion.component.html',
@@ -20,8 +22,12 @@ export class DocumentoImportacionComponent implements OnInit {
   mensajeAlertaValidacionForm: String = '';
   mensajeAlertaErrorService: String = '';
 
-  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient,
-     private spinner: NgxSpinnerService) {
+  urlDownload: any;
+  urlFTP: any;
+
+  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_DOWNLOAD'];
+    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_FTP'];
   }
 
   ngOnInit() {
@@ -42,40 +48,30 @@ export class DocumentoImportacionComponent implements OnInit {
     if (validarForm) {
       this.spinner.show();
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
-        console.log('/ftp/HIPOLITA/DEV/Invoice/DocImport/' + data.fileName);
-        // const url: string = 'https://azrav-webapp-tst28.azurewebsites.net/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        // const url: string = 'http://localhost/Hipolitasitio/api/ServicesFiles/GetFile?pathRemoteFile=' +
-        const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=' +
-          '"/ftp/HIPOLITA/DEV/Invoice/DocImport/' +
-          // 'importacion-2018-10-05-174844.pdf"';
-          data.fileName + '"';
-        console.log(url);
-        // this.httpClient.get(url).subscribe();
-        // window.open(url, '_blank', '');
+
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
         this.downloadFile.getFileDownload(url, 'pdf');
+
         /* **********funciona pdf) *****
           this.getPDF(url).subscribe((response) => {
           const file = new Blob([response], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL); } );
         // **********funciona pdf) ******/
+
         this.mostrarMensajeErrorService = false;
         this.mensajeAlertaErrorService = null;
         this.spinner.hide();
-
       },
-      error => {
-        this.spinner.hide();
-        this.mostrarMensajeErrorService = true;
-        this.mensajeAlertaErrorService = '' + error.message;
-        console.log('error', error.menssage());
-        this.spinner.hide();
-      }
-      
+        error => {
+          this.spinner.hide();
+          this.mostrarMensajeErrorService = true;
+          this.mensajeAlertaErrorService = '' + error.message;
+          console.log('error', error.menssage());
+          this.spinner.hide();
+        }
       );
-
     }
-
   }
 
   /* getPDF(strurl) {

@@ -3,6 +3,9 @@
     "URL_ADUANAS_SERVICE":"https://az-am-exp-use-dev.azure-api.net/guiamaster/hipolitaAduanas",
     "URL_ADUANAS_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
     "URL_ADUANAS_FTP":"/ftp/HIPOLITA/DEV/aduanas/",
+    "URL_DOC_IMPORTACION_SERVICE":"https://az-am-exp-use-dev.azure-api.net/documentoimportacion/DocImportacion",
+    "URL_DOC_IMPORTACION_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
+    "URL_DOC_IMPORTACION_FTP":"/ftp/HIPOLITA/DEV/Invoice/DocImport/",
 
     "URL_DOC_IMPORTACION":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
     "URL_IMPRESION_ETIQUETA":"http://localhost/Hipolita/api/Etiqueta?nro_Consultar=",
