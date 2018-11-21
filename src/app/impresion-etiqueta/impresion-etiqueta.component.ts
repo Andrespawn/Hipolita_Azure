@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ImpresionService } from './ImpresionService';
 import { DownloadFile } from '../Services/DownloadFile';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+
+import { ConfigService } from '../ReadConfig/read-config';
 
 @Component({
   selector: 'app-impresion-etiqueta',
@@ -14,8 +16,11 @@ export class ImpresionEtiquetaComponent implements OnInit {
   mostrarMsgValidaciones: Boolean = false;
   mensajeValidacuines: String = '';
 
-  constructor(private impresionService: ImpresionService, private downloadFile: DownloadFile , private httpClient: HttpClient ,  
-    private spinner: NgxSpinnerService) { }
+  urlModal: any;
+
+  constructor(private impresionService: ImpresionService, private downloadFile: DownloadFile, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    this.urlModal = configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_MODAL'];
+  }
 
   ngOnInit() {
   }
@@ -40,10 +45,11 @@ export class ImpresionEtiquetaComponent implements OnInit {
       this.mostrarMsgValidaciones = false;
       this.mensajeValidacuines = '';
     }
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const url: string = 'http://localhost/Hipolita/api/Etiqueta?nro_Consultar=' + nroGuia + '&tipo=' + opcion;
-    // const url: string = 'https://azwappfronthipodev.azaseusedev.avtest.online/api/Etiqueta?nro_Consultar=' + nroGuia + '&tipo=' + opcion;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url: string = this.urlModal + nroGuia + '&tipo=' + opcion;
+
     window.open(url);
     this.spinner.hide();
-}
+  }
 }

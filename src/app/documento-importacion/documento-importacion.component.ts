@@ -47,6 +47,7 @@ export class DocumentoImportacionComponent implements OnInit {
 
     if (validarForm) {
       this.spinner.show();
+      
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
 
         const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
