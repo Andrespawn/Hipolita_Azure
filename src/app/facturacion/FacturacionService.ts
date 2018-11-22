@@ -19,8 +19,8 @@ export class FacturacionService {
   
   getData(DateStart, DateEnd, tipo) {
 
-    this.urlFacturacionFleteService = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_FLETE_SERVICE'];
-    this.urlFacturacionImpuestoService = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_IMPUESTO_SERVICE'];
+    this.urlFacturacionFleteService = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_FLETE_SERVICE'];
+    this.urlFacturacionImpuestoService = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_IMPUESTO_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

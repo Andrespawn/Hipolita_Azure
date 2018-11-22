@@ -85,7 +85,7 @@ export class GuiaMasterComponent implements OnInit {
 
   consumirServicio(numGuia, fechaI, fechaF) {
  
-    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_GUIA_MASTER'];
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_GUIA_MASTER'];
 
     const body: GuiaAsignacionInterface = {
       Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: '', Date_GuiaMaster: ''

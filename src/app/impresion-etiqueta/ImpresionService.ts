@@ -18,7 +18,7 @@ export class ImpresionService {
   }
   getData(tipo, nroGuia) {
 
-    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_SERVICE'];
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_IMP_ETIQUETA_SERVICE'];
 
     //Set Headers
     const headers = new HttpHeaders({

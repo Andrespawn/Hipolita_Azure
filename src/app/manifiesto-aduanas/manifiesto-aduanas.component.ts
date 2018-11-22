@@ -39,8 +39,8 @@ export class ManifiestoAduanasComponent implements OnInit {
 
       this.spinner.show();
 
-      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_DOWNLOAD'];
-      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_FTP'];
+      this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_ADUANAS_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_ADUANAS_FTP'];
 
       this.aduanaService.getData(nroGuia).subscribe(data => {
 

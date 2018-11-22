@@ -47,8 +47,8 @@ export class DocumentoImportacionComponent implements OnInit {
     if (validarForm) {
       this.spinner.show();
 
-      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_DOWNLOAD'];
-      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_FTP'];
+      this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_FTP'];
 
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
 

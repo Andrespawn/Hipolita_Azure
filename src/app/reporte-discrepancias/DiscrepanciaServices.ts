@@ -17,7 +17,7 @@ export class DiscrepanciaServices {
 
   getData(fechaInicio, fechaFin) {
 
-    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_SERVICE'];
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_REPO_DISCREPANCIAS_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

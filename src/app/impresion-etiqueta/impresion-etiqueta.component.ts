@@ -46,7 +46,7 @@ export class ImpresionEtiquetaComponent implements OnInit {
       this.mensajeValidacuines = '';
     }
 
-    this.urlModal = this.configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_MODAL'];
+    this.urlModal = this.configService.loadJSON('./assets/config.js')['URL_IMP_ETIQUETA_MODAL'];
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url: string = this.urlModal + nroGuia + '&tipo=' + opcion;

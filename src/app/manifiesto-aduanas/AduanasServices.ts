@@ -17,7 +17,7 @@ export class AduanasService {
 
   getData(nroGuia) {
 
-    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_SERVICE'];
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_ADUANAS_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

@@ -16,7 +16,7 @@ export class DocumentService {
   }
 
   getData(nroDocImport, nroGuia, fechadoc) {
-    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_SERVICE'];
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

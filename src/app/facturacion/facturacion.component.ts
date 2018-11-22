@@ -47,8 +47,8 @@ export class FacturacionComponent implements OnInit {
     if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
       this.spinner.show();
 
-      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_DOWNLOAD'];
-      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_FTP'];
+      this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_FTP'];
 
       this.facturacionService.getData(fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe(data => {
         const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
