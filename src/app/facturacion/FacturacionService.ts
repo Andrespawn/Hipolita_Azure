@@ -14,11 +14,13 @@ export class FacturacionService {
   urlFacturacionImpuestoService: any;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.urlFacturacionFleteService = configService.loadJSON('./assets/config.json')['URL_FACTURACION_FLETE_SERVICE'];
-    this.urlFacturacionImpuestoService = configService.loadJSON('./assets/config.json')['URL_FACTURACION_IMPUESTO_SERVICE'];
+    
   }
   
   getData(DateStart, DateEnd, tipo) {
+
+    this.urlFacturacionFleteService = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_FLETE_SERVICE'];
+    this.urlFacturacionImpuestoService = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_IMPUESTO_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

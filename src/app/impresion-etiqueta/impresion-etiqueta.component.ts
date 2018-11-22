@@ -19,7 +19,7 @@ export class ImpresionEtiquetaComponent implements OnInit {
   urlModal: any;
 
   constructor(private impresionService: ImpresionService, private downloadFile: DownloadFile, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    this.urlModal = configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_MODAL'];
+    
   }
 
   ngOnInit() {
@@ -45,6 +45,8 @@ export class ImpresionEtiquetaComponent implements OnInit {
       this.mostrarMsgValidaciones = false;
       this.mensajeValidacuines = '';
     }
+
+    this.urlModal = this.configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_MODAL'];
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url: string = this.urlModal + nroGuia + '&tipo=' + opcion;

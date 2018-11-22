@@ -12,11 +12,12 @@ export class AduanasService {
   urlService: any;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.urlService = configService.loadJSON('./assets/config.json')['URL_ADUANAS_SERVICE'];
+    
   }
 
   getData(nroGuia) {
 
+    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

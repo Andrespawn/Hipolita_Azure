@@ -12,10 +12,12 @@ export class DiscrepanciaServices {
   urlService: any;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.urlService = configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_SERVICE'];
+    
   }
 
   getData(fechaInicio, fechaFin) {
+
+    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_SERVICE'];
 
     //Set headers
     const headers = new HttpHeaders({

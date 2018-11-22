@@ -26,8 +26,7 @@ export class DocumentoImportacionComponent implements OnInit {
   urlFTP: any;
 
   constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_DOWNLOAD'];
-    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_FTP'];
+
   }
 
   ngOnInit() {
@@ -47,7 +46,10 @@ export class DocumentoImportacionComponent implements OnInit {
 
     if (validarForm) {
       this.spinner.show();
-      
+
+      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_FTP'];
+
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
 
         const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';

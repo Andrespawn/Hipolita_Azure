@@ -12,10 +12,12 @@ export class DocumentService {
   urlService: any;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.urlService = configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_SERVICE'];
+
   }
 
   getData(nroDocImport, nroGuia, fechadoc) {
+    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_DOC_IMPORTACION_SERVICE'];
+
     //Set headers
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -38,6 +40,6 @@ export class DocumentService {
 
     //Send POST
     return this.httpClient.post<SPath>(this.urlService, body, { headers });
-    
+
   }
 }

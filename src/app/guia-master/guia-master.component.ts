@@ -38,7 +38,7 @@ export class GuiaMasterComponent implements OnInit {
   urlService: any;
 
   constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    this.urlService = configService.loadJSON('./assets/config.json')['URL_GUIA_MASTER'];
+    
   }
 
   ngOnInit() {
@@ -85,6 +85,8 @@ export class GuiaMasterComponent implements OnInit {
 
   consumirServicio(numGuia, fechaI, fechaF) {
  
+    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_GUIA_MASTER'];
+
     const body: GuiaAsignacionInterface = {
       Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: '', Date_GuiaMaster: ''
     };

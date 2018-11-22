@@ -23,8 +23,7 @@ export class ManifiestoAduanasComponent implements OnInit {
   urlFTP: any;
 
   constructor(private aduanaService: AduanasService, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_ADUANAS_DOWNLOAD'];
-    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_ADUANAS_FTP'];
+
   }
 
   ngOnInit() {
@@ -39,6 +38,9 @@ export class ManifiestoAduanasComponent implements OnInit {
     if (this.validarCampos(nroGuia)) {
 
       this.spinner.show();
+
+      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_ADUANAS_FTP'];
 
       this.aduanaService.getData(nroGuia).subscribe(data => {
 

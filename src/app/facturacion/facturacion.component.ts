@@ -22,8 +22,7 @@ export class FacturacionComponent implements OnInit {
   urlFTP: any;
 
   constructor(private spinner: NgxSpinnerService, private facturacionService: FacturacionService, private downloadFile: DownloadFile, private configService: ConfigService) {
-    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_FACTURACION_DOWNLOAD'];
-    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_FACTURACION_FTP'];
+
   }
 
   ngOnInit() {
@@ -47,6 +46,10 @@ export class FacturacionComponent implements OnInit {
     const fechaFactura_fin: any = target.querySelector('#txtDateFactura_fin').value;
     if (this.validarCampos(fechaFactura_ini, fechaFactura_fin)) {
       this.spinner.show();
+
+      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_FACTURACION_FTP'];
+
       this.facturacionService.getData(fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe(data => {
         const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
         this.downloadFile.getFileDownload(url, 'pdf');

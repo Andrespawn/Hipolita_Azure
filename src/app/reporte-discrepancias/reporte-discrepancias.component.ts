@@ -17,8 +17,7 @@ export class ReporteDiscrepanciasComponent implements OnInit {
   urlFTP: any;
 
   constructor(private discrepanciaservices: DiscrepanciaServices, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) { 
-    this.urlDownload = configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_DOWNLOAD'];
-    this.urlFTP = configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_FTP'];
+    
   }
 
   mensajeValidacion: String = '';
@@ -42,6 +41,9 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
     if (validacionForm) {
       this.spinner.show();
+
+      this.urlDownload = this.configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_DOWNLOAD'];
+      this.urlFTP = this.configService.loadJSON('./assets/config.json')['URL_REPO_DISCREPANCIAS_FTP'];
 
       this.discrepanciaservices.getData(fechIni, fechFin).subscribe(data => {
         const url: string = this.urlDownload + '"' + this.urlFTP + data.nombreArchivo + '"';

@@ -13,10 +13,13 @@ export class ImpresionService {
   urlService: any;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.urlService = configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_SERVICE'];
+    
 
   }
   getData(tipo, nroGuia) {
+
+    this.urlService = this.configService.loadJSON('./assets/config.json')['URL_IMP_ETIQUETA_SERVICE'];
+
     //Set Headers
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
