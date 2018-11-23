@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { GuiaAsignacionInterface } from './asignacion';
+import { HttpClient } from '@angular/common/http';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { strictEqual } from 'assert';
 import { ConfigService } from '../ReadConfig/read-config';
+import { AsignarGuiaMasterService } from './asignarGuiaMaster.service';
 
 @Component({
   selector: 'app-guia-master',
@@ -37,8 +36,8 @@ export class GuiaMasterComponent implements OnInit {
 
   urlService: any;
 
-  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    
+  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService, private guiaMasterService: AsignarGuiaMasterService) {
+
   }
 
   ngOnInit() {
@@ -66,16 +65,11 @@ export class GuiaMasterComponent implements OnInit {
     const validacionCampos = this.validarCampos(fechaIni, fechaFin, nroGuia);
 
     if (validacionCampos) {
-
       const fechasValidas = this.validarFechas(fechaIni, fechaFin);
-
       if (fechasValidas) {
-
         this.consumirServicio(nroGuia, fechaIni, fechaFin);
-
       }
     }
-
     if (this.guias === null) {
       target.querySelector('#txtDateIni').value = null;
       target.querySelector('#txtDateFin').value = null;
@@ -84,30 +78,9 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   consumirServicio(numGuia, fechaI, fechaF) {
- 
-    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_GUIA_MASTER'];
-
-    const body: GuiaAsignacionInterface = {
-      Date_start: fechaI, Date_end: fechaF, Consulta: true, Guia_Alertran: [numGuia], Nro_GuiaMaster: '', Date_GuiaMaster: ''
-    };
-
-    const json = JSON.stringify(body);
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'SOrigenCliente': 'Hipolita',
-      'Scanal': 'Hipolita',
-      'SUsuario': 'Hipolita',
-      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-    });
     this.spinner.show();
-    console.log(json);
-    // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-    this.httpClient.post<any>('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }/*{
-      headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200', 'Content-Type': 'application/json' })
-    }*/).subscribe(
+    
+    this.guiaMasterService.getData(fechaI, fechaF, true, [numGuia], '', '').subscribe(
       data => {
         this.guias = data;
         for (let index in this.guias) {
@@ -136,7 +109,7 @@ export class GuiaMasterComponent implements OnInit {
         this.spinner.hide();
 
       }
-      );
+    );
   }
 
   getSelectGuiaMaster(uss, isChecked) {
@@ -158,7 +131,7 @@ export class GuiaMasterComponent implements OnInit {
       this.mostrarBtnMAWB = false;
     }
 
-    console.log("",this.mostrarBtnMAWB);
+    console.log("", this.mostrarBtnMAWB);
     // console.log(this.listGuias);
   }
 
@@ -197,7 +170,6 @@ export class GuiaMasterComponent implements OnInit {
     }
   }
 
-
   actualizarGuias(event) {
     event.preventDefault();
     this.mensajeAlertaMawb = '';
@@ -208,8 +180,6 @@ export class GuiaMasterComponent implements OnInit {
     const fechMawb: Date = target.querySelector('#txtFechMawb').value;
 
     const validacionCampos = this.validarCamposMawb(nroMawb, fechMawb);
-
-
 
     if (validacionCampos) {
       this.consumirServiciodos(nroMawb, fechMawb);
@@ -230,30 +200,10 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   consumirServiciodos(varNroMawb, varFechMawb) {
-    var body: GuiaAsignacionInterface = {
-      Date_start: '', Date_end: '', Consulta: false, Guia_Alertran: this.listGuias, Nro_GuiaMaster: varNroMawb, Date_GuiaMaster: varFechMawb
-    };
 
-    var json = JSON.stringify(body);
-    console.log(json);
-    console.log(this.listGuias);
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'SOrigenCliente': 'Hipolita',
-      'Scanal': 'Hipolita',
-      'SUsuario': 'Hipolita',
-      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-    });
     this.spinner.show();
 
-    // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-    this.httpClient.post('https://az-am-exp-use-dev.azure-api.net/guiamaster/AsignarGuiaMaster/AsignarGuiaMaster', json, { headers }
-      //  headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'https://azrav-webapp-tst28.azurewebsites.net',
-      // 'Content-Type': 'application/json' })
-      // headers: new HttpHeaders({'Content-Type': 'application/json' })
-    ).subscribe(
+    this.guiaMasterService.getData('', '', false, this.listGuias, varNroMawb, varFechMawb).subscribe(
       data => {
         this.mensajeAlerta = '';
         this.mensajeAlertaMawb = '';
@@ -333,11 +283,11 @@ export class GuiaMasterComponent implements OnInit {
       }
       //console.log(this.listGuias);
 
-    }else{
+    } else {
       for (let obj in this.guias) {
         this.guias[obj].varCheck = false;
         this.listGuias = [];
-        
+
       }
       //console.log(this.listGuias);
     }

@@ -1,37 +1,49 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ConfigService } from '../ReadConfig/read-config';
 import { GuiaAsignacionInterface } from './asignacion';
-import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AsignarGuiaMasterService {
 
-  guias: Object = [];
+  urlService: any;
 
-  body: GuiaAsignacionInterface = {
-    Date_start: '', Date_end: '', Consulta: true, Guia_Alertran: ['505400041921'], Nro_GuiaMaster: "6788", Date_GuiaMaster: "2019-02-01"
-  };
-
-  json = JSON.stringify(this.body);
-
-  constructor(private httpClient: HttpClient) { 
+  constructor(private httpClient: HttpClient, private configService: ConfigService) {
   }
 
-getData() {
-  // this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', this.json, {
-  this.httpClient.post('https://avapimgmtexpqa.azure-api.net/GuiaMaster/AsignarGuiaMaster/AsignarGuiaMaster', this.json, {
-  //  headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200','Content-Type': 'application/json' })
-    }).subscribe(
-      data => {
-        this.guias = data;
-        return this.guias;
-      },
-      error => {
-        console.log('error', error);
-      }
-    );
+  getData(fechaI, fechaF, consulta, guiaAlertran, nroGuia, dateGuia) {
+
+    //Set URL Service
+    this.urlService = this.configService.loadJSON('./assets/config.js')['URL_GUIA_MASTER'];
+    
+    //Set headers
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'SOrigenCliente': 'Hipolita',
+      'Scanal': 'Hipolita',
+      'SUsuario': 'Hipolita',
+      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
+    });
+
+
+    //Build Body
+    const body: GuiaAsignacionInterface = {
+      Date_start: fechaI, Date_end: fechaF, Consulta: consulta, Guia_Alertran: guiaAlertran, Nro_GuiaMaster: nroGuia, Date_GuiaMaster: dateGuia
+    };
+
+    //Transform to JSON
+    const json = JSON.stringify(body);
+    
+    //Send POST
+    return this.httpClient.post<any>(this.urlService, json, { headers });
+
+
   }
+
+
 
 }
