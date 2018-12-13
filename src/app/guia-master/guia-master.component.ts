@@ -62,6 +62,9 @@ export class GuiaMasterComponent implements OnInit {
     const fechaIni: Date = target.querySelector('#txtDateIni').value;
     const fechaFin: Date = target.querySelector('#txtDateFin').value;
     const nroGuia = target.querySelector('#txtNroGuia').value;
+    
+    console.log("Datos ingresados [Fecha Inicio: ",fechaIni," , Fecha Fin: ",fechaFin," , Nro Guia: ",nroGuia,"]");
+
     const validacionCampos = this.validarCampos(fechaIni, fechaFin, nroGuia);
 
     if (validacionCampos) {
@@ -91,7 +94,6 @@ export class GuiaMasterComponent implements OnInit {
           this.mostrarMensajeResponse = false;
           this.mensajeResponse = null;
           this.mostrarTbl = true;
-          console.log("OK", this.guias);
         } else {
           this.mostrarMensajeResponse = true;
           this.mensajeResponse = 'No se encontraron resultados';
@@ -102,7 +104,6 @@ export class GuiaMasterComponent implements OnInit {
 
       },
       error => {
-        console.log('error ', error);
         this.mostrarTbl = false;
         this.mostrarMenErrorService = true;
         this.mensajeErrorService = '' + error.message;
@@ -113,8 +114,6 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   getSelectGuiaMaster(uss, isChecked) {
-    console.log(uss);
-    // console.log(isChecked);
     if (isChecked) {
       this.listGuias.push(uss);
     } else {
@@ -131,8 +130,6 @@ export class GuiaMasterComponent implements OnInit {
       this.mostrarBtnMAWB = false;
     }
 
-    console.log("", this.mostrarBtnMAWB);
-    // console.log(this.listGuias);
   }
 
   validarCampos(fecIni, fecFin, nroG) {
@@ -186,11 +183,11 @@ export class GuiaMasterComponent implements OnInit {
     } else {
 
     }
+    
   }
 
   validarCamposMawb(varNroMawb, varFechMawb) {
     if (varNroMawb !== '' || varFechMawb !== '') {
-      console.log(varNroMawb, varFechMawb);
       return true;
     } else {
       this.mensajeAlertaMawb = this.mensajeAlertaMawb + 'Debe diligenciar los campos "Numero de MAWB" y "Fecha de MAWB". ';
@@ -234,7 +231,6 @@ export class GuiaMasterComponent implements OnInit {
         this.mensajeSuccessMawb = '';
         this.mostrarMenSuccessMawb = false;
         this.mostrarBtnMAWB = false;
-        console.log('error ', error);
         this.mensajeErrorMawb = error.message;
         this.mostrarMenErrorMawb = true;
 
@@ -281,7 +277,6 @@ export class GuiaMasterComponent implements OnInit {
         this.guias[obj].varCheck = true;
         this.listGuias.push(this.guias[obj].Shipment_number);
       }
-      //console.log(this.listGuias);
 
     } else {
       for (let obj in this.guias) {
@@ -289,7 +284,6 @@ export class GuiaMasterComponent implements OnInit {
         this.listGuias = [];
 
       }
-      //console.log(this.listGuias);
     }
 
 

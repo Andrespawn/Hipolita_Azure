@@ -34,7 +34,6 @@ export class FacturacionComponent implements OnInit {
     this.isChecked = true;
     this.selectedFactura = event.target.value;
     this.tipoFactura = this.selectedFactura;
-    console.log(this.selectedFactura);
 
   }
 
@@ -57,7 +56,6 @@ export class FacturacionComponent implements OnInit {
         this.spinner.hide();
       },
         error => {
-          console.log('Finish 2');
           this.spinner.hide();
         }
       );

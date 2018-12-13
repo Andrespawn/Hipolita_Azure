@@ -16,7 +16,9 @@ export class DocumentService {
   }
 
   getData(nroDocImport, nroGuia, fechadoc) {
+
     this.urlService = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_SERVICE'];
+    console.log('*****REQUEST URL***** ',this.urlService);
 
     //Set headers
     const headers = new HttpHeaders({
@@ -28,15 +30,18 @@ export class DocumentService {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
+    console.log('*****REQUEST HEADERS***** ',headers);
 
     //Build Body
     const body: String = '[{"Shipment_Number":"' +
       nroGuia + '","Nro_DeclaracionImportacion":"' +
       nroDocImport + '","Date_Declaracion":"' +
       fechadoc + '"}]';
+    console.log('*****REQUEST BODY***** ',body);
 
     //Transform to JSON
     const json = JSON.stringify(body);
+    console.log('*****REQUEST  JSON***** ',json);
 
     //Send POST
     return this.httpClient.post<SPath>(this.urlService, body, { headers });

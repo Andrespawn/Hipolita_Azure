@@ -18,6 +18,7 @@ export class DiscrepanciaServices {
   getData(fechaInicio, fechaFin) {
 
     this.urlService = this.configService.loadJSON('./assets/config.js')['URL_REPO_DISCREPANCIAS_SERVICE'];
+    console.log('*****REQUEST URL***** ',this.urlService);
 
     //Set headers
     const headers = new HttpHeaders({
@@ -29,10 +30,12 @@ export class DiscrepanciaServices {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
+    console.log('*****REQUEST HEADERS***** ',headers);
 
     //Build body
     const body: String = '{"Query": {"Date_start":"' +
       fechaInicio + '", "Date_end" : "' + fechaFin + '"}}';
+      console.log('*****REQUEST BODY ***** ',body);
 
     //Send POST
     return this.httpClient.post<SPathDiscrepacias>(this.urlService,

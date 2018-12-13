@@ -29,24 +29,6 @@ export class AppComponent {
   });
 
   ngOnInit() {
-
-/*
-    let json = JSON.stringify(this.body);
-
-    console.log(json);
-
-
-
-    this.httpClient.post('http://172.20.6.6:8185/cxf/AsignarGuiaMaster/AsignarGuiaMaster', json, {
-      headers: new HttpHeaders({ 'Access-Control-Allow-Origin': 'http://localhost:4200','Content-Type': 'application/json' })
-    }).subscribe(
-      HttpResponse => {
-        console.log("Post request is successful", HttpResponse);
-      },
-      error => {
-        console.log("error ", error);
-      }
-    );*/
     
   }
 

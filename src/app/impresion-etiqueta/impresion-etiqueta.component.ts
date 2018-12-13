@@ -14,12 +14,17 @@ import { ConfigService } from '../ReadConfig/read-config';
 export class ImpresionEtiquetaComponent implements OnInit {
 
   mostrarMsgValidaciones: Boolean = false;
+  mostrarMsgDescarga: Boolean = false;
+  mostrarMsgError: Boolean = false;
+
   mensajeValidacuines: String = '';
+  mensajeDescarga: String = '';
+  mensajeError: String = '';
 
   urlModal: any;
 
   constructor(private impresionService: ImpresionService, private downloadFile: DownloadFile, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
-    
+
   }
 
   ngOnInit() {
@@ -31,6 +36,13 @@ export class ImpresionEtiquetaComponent implements OnInit {
     const target = event.target;
     const opcion: any = target.querySelector('#cmbOpcion').value;
     const nroGuia: any = target.querySelector('#txtNroGuia').value;
+
+    this.mostrarMsgDescarga = false;
+    this.mostrarMsgValidaciones = false
+    this.mostrarMsgError = false;
+    this.mensajeDescarga = "";
+    this.mensajeValidacuines = "";
+    this.mensajeError = '';
 
     if (nroGuia === '' && opcion === 'void') {
       this.mostrarMsgValidaciones = true;
@@ -50,8 +62,31 @@ export class ImpresionEtiquetaComponent implements OnInit {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url: string = this.urlModal + nroGuia + '&tipo=' + opcion;
+    console.log('*****DOWNLOAD URL***** ', url);
 
-    window.open(url);
+    this.getFileDownload(url, 'pdf');
+    console.log('*****DOWNLOAD***** ');
     this.spinner.hide();
   }
+
+
+  getFileDownload(url, typeFileName) {
+    this.downloadFile.getFile(url).subscribe((response) => {
+
+      const file = new Blob([response], { type: 'application/' + typeFileName });
+      if (file.size > 0) {
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      } else {
+        this.mostrarMsgDescarga = true;
+        this.mensajeDescarga = "No se encontro ningun archivo.";
+      }
+    },
+      error => {
+        this.mostrarMsgError=true;
+        this.mensajeError=error.message;
+        
+      });
+  }
+
 }

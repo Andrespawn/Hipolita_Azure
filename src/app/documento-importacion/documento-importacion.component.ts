@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
 import { DocumentService } from './document.service';
 import { DownloadFile } from '../Services/DownloadFile';
 import { error } from '@angular/compiler/src/util';
@@ -9,6 +9,9 @@ import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 import { ConfigService } from '../ReadConfig/read-config';
+import { Response } from '@angular/http';
+
+@Injectable()
 
 @Component({
   selector: 'app-documento-importacion',
@@ -19,8 +22,10 @@ export class DocumentoImportacionComponent implements OnInit {
 
   mostrarMensajeValidacionForm: Boolean = false;
   mostrarMensajeErrorService: Boolean = false;
+  mostrarMensajeFileVoid: Boolean = false;
   mensajeAlertaValidacionForm: String = '';
   mensajeAlertaErrorService: String = '';
+  mensajeAlertaFileVoid: String = '';
 
   urlDownload: any;
   urlFTP: any;
@@ -45,47 +50,54 @@ export class DocumentoImportacionComponent implements OnInit {
     const validarForm = this.validarCampos(nroDocImport, nroGuia, fechadoc);
 
     if (validarForm) {
+
       this.spinner.show();
+
 
       this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_DOWNLOAD'];
       this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_FTP'];
 
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
+        if (data !== null) {
 
-        const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
-        this.downloadFile.getFileDownload(url, 'pdf');
 
-        /* **********funciona pdf) *****
-          this.getPDF(url).subscribe((response) => {
-          const file = new Blob([response], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL); } );
-        // **********funciona pdf) ******/
+          const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
+          console.log('*****DOWNLOAD URL***** ', url);
 
-        this.mostrarMensajeErrorService = false;
-        this.mensajeAlertaErrorService = null;
-        this.spinner.hide();
-      },
-        error => {
-          this.spinner.hide();
-          this.mostrarMensajeErrorService = true;
-          this.mensajeAlertaErrorService = '' + error.message;
-          console.log('error', error.menssage());
+          this.downloadFile.getFileDownload(url, 'pdf');
+
+          /* **********funciona pdf) *****
+            this.getPDF(url).subscribe((response) => {
+            const file = new Blob([response], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL); } );
+          // **********funciona pdf) ******/
+
+          this.mostrarMensajeErrorService = false;
+          this.mensajeAlertaErrorService = null;
+          this.mostrarMensajeFileVoid = false;
+          this.mensajeAlertaFileVoid = '';
           this.spinner.hide();
         }
+        else {
+          this.mostrarMensajeFileVoid = true;
+          this.mensajeAlertaFileVoid = 'No se encontro archivo con los valores proporcionados.';
+          this.spinner.hide();
+        }
+
+      },
+        error => {
+          this.mostrarMensajeErrorService = true;
+          this.mensajeAlertaErrorService = '' + error.message;
+          this.mostrarMensajeFileVoid = false;
+          this.mensajeAlertaFileVoid = '';
+          this.spinner.hide();
+
+        }
+
       );
     }
   }
-
-  /* getPDF(strurl) {
-     // const url = `${this.serviceUrl}/pdf`;
-     const httpOptions = {
-       'responseType'  : 'arraybuffer' as 'json'
-        // 'responseType'  : 'blob' as 'json'        //This also worked
-     };
-       return this.httpClient.get<any>(strurl , httpOptions);
-     }*/
-
 
   validarCampos(NroImportacion, nroG, fecfecha) {
     this.mensajeAlertaValidacionForm = '';

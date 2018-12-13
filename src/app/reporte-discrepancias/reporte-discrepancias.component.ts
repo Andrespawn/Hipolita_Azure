@@ -47,12 +47,12 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
       this.discrepanciaservices.getData(fechIni, fechFin).subscribe(data => {
         const url: string = this.urlDownload + '"' + this.urlFTP + data.nombreArchivo + '"';
+        console.log('*****DOWNLOAD URL***** ',url);
 
-        this.downloadFile.getFileDownload(url, 'csv');
+        this.downloadFile.getDownloadCSV(url, data.nombreArchivo);
         this.spinner.hide();
       },
         error => {
-          console.log('error', error);
           this.spinner.hide();
         });
 
@@ -98,33 +98,4 @@ export class ReporteDiscrepanciasComponent implements OnInit {
 
   }
 
-  /*consumirServicio(fechaInicio, fechaFin) {
-
-
-    const headers = new HttpHeaders({
-      'Ocp-Apim-Subscription-Key': '5a14178462d24ca39fc93398ee444a91',
-      'Ocp-Apim-Trace': 'true',
-      'Cache-Control': 'no-cache',
-      'Content-Type': 'application/json',
-      'SUsuario': 's',
-      'SOrigenCliente': 'a',
-      'Scanal': 'w',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-    });
-
-
-    const body: String = '{"Query": { "Date_start":"' + fechaInicio + '", "Date_end":"' + fechaFin + '" } }';
-
-    return this.httpClient.post('https://avapimgmtexpqa.azure-api.net/discrepancia/reporteDiscrepancia', body, { headers }).subscribe(
-      data => {
-        console.log(data);
-      },
-      error => {
-        this.mostrarMensajeErrorService = true;
-        this.mensajeErrorService = error.message;
-      }
-    );
-
-  }*/
 }

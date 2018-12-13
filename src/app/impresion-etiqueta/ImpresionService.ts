@@ -17,8 +17,8 @@ export class ImpresionService {
 
   }
   getData(tipo, nroGuia) {
-
     this.urlService = this.configService.loadJSON('./assets/config.js')['URL_IMP_ETIQUETA_SERVICE'];
+    console.log('*****REQUEST URL***** ',this.urlService);
 
     //Set Headers
     const headers = new HttpHeaders({
@@ -30,9 +30,11 @@ export class ImpresionService {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
+    console.log('*****REQUEST HEADERS***** ',headers);
 
     //Build body
     const body: String = '{ "ETIQUETAS":[{ "NRO_CONSULTAR":"' + nroGuia + '", "TIPO":"' + tipo + '" } ] }';
+    console.log('*****REQUEST BODY***** ',body);
 
     //Send POST
     return this.httpClient.post<SEtiqueta>(this.urlService, body, { headers });

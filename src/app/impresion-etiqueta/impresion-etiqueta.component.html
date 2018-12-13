@@ -82,6 +82,28 @@
             </div>
         </div>
 
+        <div *ngIf="mostrarMsgDescarga">
+            <div class="alert alert-info" role="alert" style="text-align: center">
+                <strong>¡Información!</strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeDescarga}}
+                </div>
+
+            </div>
+        </div>
+
+        <div *ngIf="mostrarMsgError">
+            <div class="alert alert-danger" role="alert" style="text-align: center">
+                <strong>¡Error!</strong>
+                <br>
+                <div style="font-size: 13px;">
+                    {{mensajeError}}
+                </div>
+
+            </div>
+        </div>
+
         <input type="text" placeholder="Número Guía" id="txtNroGuia" name="txtNroGuia" class="form-control">
 
         <select class="form-control " name="cmbOpcion" id="cmbOpcion">
