@@ -11,6 +11,7 @@ import { ConfigService } from '../ReadConfig/read-config';
 export class ImpresionService {
 
   urlService: any;
+  private apimSubscriptionKey = this.configService.loadJSON('./assets/config.js')['APIM_SUBSCRIPTION_KEY'];
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
     
@@ -23,7 +24,7 @@ export class ImpresionService {
     //Set Headers
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
+      'Ocp-Apim-Subscription-Key': this.apimSubscriptionKey,
       'SOrigenCliente': 'Hipolita',
       'Scanal': 'Hipolita',
       'SUsuario': 'Hipolita',

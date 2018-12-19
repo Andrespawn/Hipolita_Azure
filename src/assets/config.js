@@ -14,5 +14,6 @@
     "URL_FACTURACION_FTP":"/ftp/HIPOLITA/DEV/Facturacion/",
     "URL_REPO_DISCREPANCIAS_SERVICE":"https://az-am-exp-use-dev.azure-api.net/guiamaster/reporteDiscrepancia",
     "URL_REPO_DISCREPANCIAS_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
-    "URL_REPO_DISCREPANCIAS_FTP":"/ftp/HIPOLITA/DEV/Discrepancias/"
+    "URL_REPO_DISCREPANCIAS_FTP":"/ftp/HIPOLITA/DEV/Discrepancias/",
+    "APIM_SUBSCRIPTION_KEY":"80336ece60c2410c86a8c7503170af68"
 }
