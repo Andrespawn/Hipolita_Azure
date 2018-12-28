@@ -57,6 +57,7 @@
             </button>
             <div class="desplegado-contenido">
                 <a routerLink="/facturacion">Facturación</a>
+                <a routerLink="/facturaComercial">Consultar Factura Comercial</a>
             </div>
         </div>
         <div class="desplegable">
@@ -100,10 +101,10 @@
             </div>
         </div>
 
-        <div *ngIf="mostrarMenErrorService">
+        <div *ngIf="verMensajeError">
             <div class="alert alert-danger " role="alert" style="text-align: center">
 
-                <strong>Error </strong>
+                <strong>¡Error!</strong>
                 <br>
                 <div style="font-size: 13px;">
                     {{mensajeErrorService}}

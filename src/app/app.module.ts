@@ -24,6 +24,10 @@ import { DocumentService } from './documento-importacion/document.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { ConfigService } from './ReadConfig/read-config';
+import { FacturasComercialesComponent } from './facturas-comerciales/consultar-factura-comercial.component';
+
+import{ NgxPaginationModule } from 'ngx-pagination';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +39,8 @@ import { ConfigService } from './ReadConfig/read-config';
     DocumentoImportacionComponent,
     ImpresionEtiquetaComponent,
     FacturacionComponent,
-    ReporteDiscrepanciasComponent
+    ReporteDiscrepanciasComponent,
+    FacturasComercialesComponent
   ],
   imports: [
     NgxSpinnerModule,
@@ -44,6 +49,7 @@ import { ConfigService } from './ReadConfig/read-config';
     HttpClientModule,
     BsDatepickerModule.forRoot(),
     NgbModule,
+    NgxPaginationModule,
     RouterModule.forRoot(
       [
 
@@ -78,6 +84,10 @@ import { ConfigService } from './ReadConfig/read-config';
         {
           path: 'reporteDiscrepancias',
           component: ReporteDiscrepanciasComponent
+        },
+        {
+          path: 'facturaComercial',
+          component: FacturasComercialesComponent
         }
       ]
     )
