@@ -9,6 +9,7 @@ import { GuiaAsignacionInterface } from './asignacion';
 export class AsignarGuiaMasterService {
 
   urlService: any;
+  private apimSubscriptionKey = this.configService.loadJSON('./assets/config.js')['APIM_SUBSCRIPTION_KEY'];
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
   }
@@ -25,7 +26,7 @@ export class AsignarGuiaMasterService {
       'SOrigenCliente': 'Hipolita',
       'Scanal': 'Hipolita',
       'SUsuario': 'Hipolita',
-      'Ocp-Apim-Subscription-Key': '80336ece60c2410c86a8c7503170af68',
+      'Ocp-Apim-Subscription-Key': this.apimSubscriptionKey,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
     });
