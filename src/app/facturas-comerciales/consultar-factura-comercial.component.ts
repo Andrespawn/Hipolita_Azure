@@ -44,7 +44,7 @@ export class FacturasComercialesComponent implements OnInit {
 
     if (validacionCampos) {
       this.spinner.show();
-      const tales = this.consultaService.getData(fechaIni, fechaFin, nroGuia, nroFactura, '', '').subscribe(
+      const service = this.consultaService.getData(fechaIni, fechaFin, nroGuia, nroFactura, '', '').subscribe(
         data => {
           console.log('Data****************', data);
 
@@ -78,7 +78,7 @@ export class FacturasComercialesComponent implements OnInit {
       target.querySelector('#txtDateFin').value = '';
       target.querySelector('#txtNroGuia').value = '';
       target.querySelector('#txtNroFactura').value = '';
-      console.log('Tales****************',tales);
+      console.log('Service****************',service);
     } else {
       this.verTable = false;
     }

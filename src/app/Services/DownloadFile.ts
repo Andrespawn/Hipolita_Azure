@@ -32,7 +32,6 @@ export class DownloadFile {
         });
         this.spinner.hide();
     }
-    
     stringToArray(bufferString) {
         const uint8Array = new TextEncoder().encode(bufferString);
         return uint8Array;
