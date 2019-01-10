@@ -15,6 +15,9 @@
     "URL_REPO_DISCREPANCIAS_SERVICE":"https://az-am-exp-use-dev.azure-api.net/guiamaster/reporteDiscrepancia",
     "URL_REPO_DISCREPANCIAS_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
     "URL_REPO_DISCREPANCIAS_FTP":"/ftp/HIPOLITA/DEV/Discrepancias/",
-    "APIM_SUBSCRIPTION_KEY":"80336ece60c2410c86a8c7503170af68"
+    "APIM_SUBSCRIPTION_KEY":"80336ece60c2410c86a8c7503170af68",
+    "URL_FACTURA_COMERCIAL_SERVICE":"http://localhost:8182/cxf/rest/hipolita/ConsultaArchivos",
+    "ESB_ERROR_STATUS" : "400-412-500-408",
+    "ESB_COMPLETE_WITH_ERROR_STATUS" : "204",
     "URL_FACTURA_COMERCIAL_SERVICE":"http://localhost:8182/cxf/rest/hipolita/ConsultaArchivos"
 }

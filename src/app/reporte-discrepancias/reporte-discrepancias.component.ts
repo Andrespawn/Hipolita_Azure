@@ -1,32 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { DiscrepanciaServices } from './DiscrepanciaServices';
 import { DownloadFile } from '../Services/DownloadFile';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { ConfigService } from '../ReadConfig/read-config';
+import { Messages} from '../Library/Messages';
 
 @Component({
   selector: 'app-reporte-discrepancias',
   templateUrl: './reporte-discrepancias.component.html',
   styleUrls: ['./reporte-discrepancias.component.css']
 })
-export class ReporteDiscrepanciasComponent implements OnInit {
+export class ReporteDiscrepanciasComponent extends Messages {
 
-  urlDownload: any;
-  urlFTP: any;
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
+  private urlDownload: any;
+  private urlFTP: any;
 
   constructor(private discrepanciaservices: DiscrepanciaServices, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) { 
-    
-  }
-
-  mensajeValidacion: String = '';
-  mensajeErrorService: String = '';
-
-  mostrarMensajeValidacion: Boolean = false;
-  mostrarMensajeErrorService: Boolean = false;
-
-  ngOnInit() {
+    super();
   }
 
   generarReporte(event) {
@@ -46,10 +38,10 @@ export class ReporteDiscrepanciasComponent implements OnInit {
       this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_REPO_DISCREPANCIAS_FTP'];
 
       this.discrepanciaservices.getData(fechIni, fechFin).subscribe(data => {
-        const url: string = this.urlDownload + '"' + this.urlFTP + data.nombreArchivo + '"';
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.body.nombreArchivo + '"';
         console.log('*****DOWNLOAD URL***** ',url);
 
-        this.downloadFile.getDownloadCSV(url, data.nombreArchivo);
+        this.downloadFile.getDownloadCSV(url, data.body.nombreArchivo);
         this.spinner.hide();
       },
         error => {

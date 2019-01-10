@@ -1,35 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { ConsultarFacturaComercialService } from './consultar-factura-comercial-service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { HttpResponse } from '@angular/common/http';
-
+import { ConfigService } from '../ReadConfig/read-config';
+import { Messages} from '../Library/Messages';
 
 @Component({
   selector: 'app-new-component',
   templateUrl: './consultar-factura-comercial.component.html',
   styleUrls: ['./consultar-factura-comercial.component.css']
 })
-export class FacturasComercialesComponent implements OnInit {
-
-  verTable: boolean = false;
-  verMensajeValidacion: boolean = false;
-  verMensajeError: boolean = false;
-  verMensajeInfo: boolean = false;
-
-  mensajeValidacion: string = '';
-  mensajeErrorService: string = '';
-  mensajeInfo: string = '';
+export class FacturasComercialesComponent extends Messages {
 
   public listArchivos: { nameFile: string, pathFile: string, document: string }[] = [];
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
 
-  constructor(private consultaService: ConsultarFacturaComercialService, private spinner: NgxSpinnerService) { }
-
-  ngOnInit() {
-  }
+  constructor(private consultaService: ConsultarFacturaComercialService, private configService: ConfigService, private spinner: NgxSpinnerService) {
+    super();
+   }
 
   consultar(event) {
     event.preventDefault();
-
     this.inicializarVariables();
     this.listArchivos = [];
 
@@ -41,35 +32,49 @@ export class FacturasComercialesComponent implements OnInit {
     const nroFactura = target.querySelector('#txtNroFactura').value;
 
     const validacionCampos = this.validarCampos(fechaIni, fechaFin, nroGuia, nroFactura);
-
     if (validacionCampos) {
       this.spinner.show();
-      const tales = this.consultaService.getData(fechaIni, fechaFin, nroGuia, nroFactura, '', '').subscribe(
+      const service = this.consultaService.getData(fechaIni, fechaFin, nroGuia, nroFactura, '', '').subscribe(
         data => {
+          if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.mostrarMensajeResponse = true;
+            this.mensajeResponse = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+            this.spinner.hide();
+            return;
+          }
+  
+          if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.mostrarMensajeResponse = true;
+            this.mensajeResponse = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+            this.spinner.hide();
+            return;
+          }
+  
           console.log('Data****************', data);
+          if (data.body.documents.length === 0) {
 
-          if (data.documents.length === 0) {
-
-            this.verMensajeInfo = true;
-            this.mensajeInfo = 'No se encontraron archivos.';
+            this.mostrarMensajeResponse = true;
+            this.mensajeResponse = 'No se encontraron archivos.';
           } else {
-            if (data.documents.length > 1) {
+            if (data.body.documents.length > 1) {
 
-              this.verTable = true;
-              for (let index in data.documents) {
-                this.listArchivos.push({ nameFile: data.documents[index].nameFile, pathFile: data.documents[index].pathFile, document: '' });
+              this.mostrarTbl = true;
+              for (let index in data.body.documents) {
+                this.listArchivos.push({ nameFile: data.body.documents[index].nameFile, pathFile: data.body.documents[index].pathFile, document: '' });
               }
             } else {
-              this.verTable = false;
-              this.descargarArchivo(data.documents[0].pathFile, data.documents[0].nameFile)
+              this.mostrarTbl = false;
+              this.descargarArchivo(data.body.documents[0].pathFile, data.body.documents[0].nameFile)
             }
           }
           this.spinner.hide();
         },
         error => {
           console.log('Error****************', error);
-          this.verMensajeError = true;
-          this.mensajeErrorService = '' + error.message;
+          var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+          errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
+          this.mostrarMenErrorService = true;
+          this.mensajeErrorService = errorMessage;
           
           this.spinner.hide();
         }
@@ -78,9 +83,9 @@ export class FacturasComercialesComponent implements OnInit {
       target.querySelector('#txtDateFin').value = '';
       target.querySelector('#txtNroGuia').value = '';
       target.querySelector('#txtNroFactura').value = '';
-      console.log('Tales****************',tales);
+      console.log('Service****************',service);
     } else {
-      this.verTable = false;
+      this.mostrarTbl = false;
     }
   }
 
@@ -91,45 +96,45 @@ export class FacturasComercialesComponent implements OnInit {
     if (fechaIni === '' && fechaFin === '' && nroGuia === '' && nroFactura === '') {
       validado = false;
 
-      this.mensajeValidacion = 'Debe diligenciar algun campo';
-      this.verMensajeValidacion = true;
+      this.mensajeAlerta = 'Debe diligenciar algun campo';
+      this.mostrarMensaje = true;
 
     } else if (fechaIni === '' && fechaFin === '' && nroGuia === '' && nroFactura !== '') {
       validado = true;
 
-      this.verMensajeValidacion = false;
-      this.mensajeValidacion = '';
+      this.mostrarMensaje = false;
+      this.mensajeAlerta = '';
 
     } else if (fechaIni === '' && fechaFin === '' && nroGuia !== '' && nroFactura === '') {
       validado = true;
 
-      this.verMensajeValidacion = false;
-      this.mensajeValidacion = '';
+      this.mostrarMensaje = false;
+      this.mensajeAlerta = '';
 
     } else if (fechaIni !== '' && fechaFin === '' && nroGuia === '' && nroFactura === '') {
       validado = false;
 
-      this.mensajeValidacion = 'Debe diligenciar fecha Fin';
-      this.verMensajeValidacion = true;
+      this.mensajeAlerta = 'Debe diligenciar fecha Fin';
+      this.mostrarMensaje = true;
 
     } else if (fechaIni === '' && fechaFin !== '' && nroGuia === '' && nroFactura === '') {
       validado = false;
 
-      this.mensajeValidacion = 'Debe diligenciar fecha inicio';
-      this.verMensajeValidacion = true;
+      this.mensajeAlerta = 'Debe diligenciar fecha inicio';
+      this.mostrarMensaje = true;
 
     } else if (fechaIni !== '' && fechaFin !== '' && nroGuia === '' && nroFactura === '') {
       if (fechaIni > fechaFin) {
         validado = false;
 
-        this.mensajeValidacion = 'Fecha inicio debe menor a la fecha fin ';
-        this.verMensajeValidacion = true;
+        this.mensajeAlerta = 'Fecha inicio debe menor a la fecha fin ';
+        this.mostrarMensaje = true;
 
       } else {
         validado = true;
 
-        this.mensajeValidacion = '';
-        this.verMensajeValidacion = false;
+        this.mensajeAlerta = '';
+        this.mostrarMensaje = false;
 
       }
     }
@@ -140,22 +145,37 @@ export class FacturasComercialesComponent implements OnInit {
     this.spinner.show();
     this.consultaService.getData('', '', '', '', filepath, fileName).subscribe(
       data => {
-        const linkSource = 'data:application/pdf;base64,' + data.documents[0].document;
+        if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.mostrarMensajeResponse = true;
+          this.mensajeResponse =data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+          this.spinner.hide();
+          return;
+        }
+
+        if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.mostrarMensajeResponse = true;
+          this.mensajeResponse =data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+          this.spinner.hide();
+          return;
+        }
+        const linkSource = 'data:application/pdf;base64,' + data.body.documents[0].document;
         const downloadLink = document.createElement("a");
-        const fileName = data.documents[0].nameFile;
+        const fileName = data.body.documents[0].nameFile;
 
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
         downloadLink.click();
-        this.verMensajeInfo = true;
-        this.mensajeInfo = 'Documento generado exitosamente';
+        this.mostrarMensajeResponse = true;
+        this.mensajeResponse = 'Documento generado exitosamente';
         this.spinner.hide();
       },
       error => {
-        this.verMensajeInfo = false;
-        this.mensajeInfo = '';
-        this.verMensajeError = true;
-        this.mensajeErrorService = '' + error.message;
+        var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+        errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
+        this.mostrarMensajeResponse = false;
+        this.mensajeResponse = '';
+        this.mostrarMenErrorService = true;
+        this.mensajeErrorService = errorMessage;
         this.spinner.hide();
       }
     );
@@ -167,14 +187,14 @@ export class FacturasComercialesComponent implements OnInit {
   }
 
   inicializarVariables() {
-    this.verTable = false;
-    this.verMensajeValidacion = false;
-    this.verMensajeError = false;
-    this.verMensajeInfo = false;
+    this.mostrarTbl = false;
+    this.mostrarMensaje = false;
+    this.mostrarMenErrorService = false;
+    this.mostrarMensajeResponse = false;
 
-    this.mensajeValidacion = '';
+    this.mensajeAlerta = '';
     this.mensajeErrorService = '';
-    this.mensajeInfo = '';
+    this.mensajeResponse = '';
 
     this.listArchivos = [];
   }

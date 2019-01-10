@@ -38,6 +38,6 @@ export class ImpresionService {
     console.log('*****REQUEST BODY***** ',body);
 
     //Send POST
-    return this.httpClient.post<SEtiqueta>(this.urlService, body, { headers });
+    return this.httpClient.post<SEtiqueta>(this.urlService, body, { headers , observe: 'response'});
   }
 }

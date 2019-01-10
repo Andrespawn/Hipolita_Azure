@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ConfigService } from '../ReadConfig/read-config';
 
 import { ConsultaFacturaCoInterface } from './consultar-factura-comercial-interface';
@@ -44,12 +44,6 @@ export class ConsultarFacturaComercialService {
     console.log('*****REQUEST JSON*****: ', json);
 
     //Send POST
-    return this.httpClient.post<any>(this.urlService, json, { headers });
-
-
+    return this.httpClient.post<any>(this.urlService, json, { headers , observe: 'response'});
   }
-
-
-
-
 }

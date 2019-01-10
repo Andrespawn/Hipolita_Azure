@@ -1,15 +1,9 @@
 import { Component, OnInit, Injectable } from '@angular/core';
 import { DocumentService } from './document.service';
 import { DownloadFile } from '../Services/DownloadFile';
-import { error } from '@angular/compiler/src/util';
-import { SPath } from '../Services/sPath';
-import { isError } from 'util';
-import { ifError } from 'assert';
-import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { ConfigService } from '../ReadConfig/read-config';
-import { Response } from '@angular/http';
+import { Messages} from '../Library/Messages';
 
 @Injectable()
 
@@ -18,23 +12,16 @@ import { Response } from '@angular/http';
   templateUrl: './documento-importacion.component.html',
   styleUrls: ['./documento-importacion.component.css']
 })
-export class DocumentoImportacionComponent implements OnInit {
+export class DocumentoImportacionComponent extends Messages {
 
-  mostrarMensajeValidacionForm: Boolean = false;
-  mostrarMensajeErrorService: Boolean = false;
-  mostrarMensajeFileVoid: Boolean = false;
-  mensajeAlertaValidacionForm: String = '';
-  mensajeAlertaErrorService: String = '';
-  mensajeAlertaFileVoid: String = '';
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
 
-  urlDownload: any;
-  urlFTP: any;
+  private urlDownload: any;
+  private urlFTP: any;
 
-  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
-
-  }
-
-  ngOnInit() {
+  constructor(private downloadFile: DownloadFile, private documentService: DocumentService, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    super();
   }
 
   buscarRuta(event) {
@@ -47,54 +34,45 @@ export class DocumentoImportacionComponent implements OnInit {
     const nroGuia = target.querySelector('#nroGuiaAlert').value;
     const nroDocImport = target.querySelector('#nroDocImport').value;
 
-    const validarForm = this.validarCampos(nroDocImport, nroGuia, fechadoc);
-
-    if (validarForm) {
+    if (this.validarCampos(nroDocImport, nroGuia, fechadoc)) {
 
       this.spinner.show();
-
 
       this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_DOWNLOAD'];
       this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_DOC_IMPORTACION_FTP'];
 
       this.documentService.getData(nroDocImport, nroGuia, fechadoc).subscribe(data => {
+        console.log(data);
         if (data !== null) {
+          if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.showErrorMessageSearchDocumentPath(true,data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'),false,'');
+            this.spinner.hide();
+            return;
+          }
+  
+          if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.showErrorMessageSearchDocumentPath(false,'',true,data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'));
+            this.spinner.hide();
+            return;
+          }
 
-
-          const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
+          const url: string = this.urlDownload + '"' + this.urlFTP + data.body.fileName + '"';
           console.log('*****DOWNLOAD URL***** ', url);
 
           this.downloadFile.getFileDownload(url, 'pdf');
-
-          /* **********funciona pdf) *****
-            this.getPDF(url).subscribe((response) => {
-            const file = new Blob([response], { type: 'application/pdf' });
-            const fileURL = URL.createObjectURL(file);
-            window.open(fileURL); } );
-          // **********funciona pdf) ******/
-
-          this.mostrarMensajeErrorService = false;
-          this.mensajeAlertaErrorService = null;
-          this.mostrarMensajeFileVoid = false;
-          this.mensajeAlertaFileVoid = '';
-          this.spinner.hide();
+          this.showErrorMessageSearchDocumentPath(false,'',false,'');
         }
         else {
-          this.mostrarMensajeFileVoid = true;
-          this.mensajeAlertaFileVoid = 'No se encontro archivo con los valores proporcionados.';
-          this.spinner.hide();
+          this.showErrorMessageSearchDocumentPath(false,'',true,'No se encontro archivo con los valores proporcionados.');
         }
-
+        this.spinner.hide();
       },
         error => {
-          this.mostrarMensajeErrorService = true;
-          this.mensajeAlertaErrorService = '' + error.message;
-          this.mostrarMensajeFileVoid = false;
-          this.mensajeAlertaFileVoid = '';
+          var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+          errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
+          this.showErrorMessageSearchDocumentPath(true,errorMessage,false,'');
           this.spinner.hide();
-
         }
-
       );
     }
   }

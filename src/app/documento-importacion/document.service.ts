@@ -45,7 +45,7 @@ export class DocumentService {
     console.log('*****REQUEST  JSON***** ',json);
 
     //Send POST
-    return this.httpClient.post<SPath>(this.urlService, body, { headers });
+    return this.httpClient.post<SPath>(this.urlService, body, { headers , observe: 'response'});
 
   }
 }

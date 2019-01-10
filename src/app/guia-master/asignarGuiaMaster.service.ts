@@ -43,11 +43,6 @@ export class AsignarGuiaMasterService {
     console.log('*****REQUEST JSON*****: ',json);
 
     //Send POST
-    return this.httpClient.post<any>(this.urlService, json, { headers });
-
-
+    return this.httpClient.post<any>(this.urlService, json, { headers , observe: 'response'});
   }
-
-
-
 }

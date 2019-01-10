@@ -1,32 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AduanasService } from './AduanasServices';
 import { DownloadFile } from '../Services/DownloadFile';
-
 import { NgxSpinnerService } from 'ngx-spinner';
-
 import { ConfigService } from '../ReadConfig/read-config';
+import { Messages} from '../Library/Messages';
 
 @Component({
   selector: 'app-manifiesto-aduanas',
   templateUrl: './manifiesto-aduanas.component.html',
   styleUrls: ['./manifiesto-aduanas.component.css']
 })
-export class ManifiestoAduanasComponent implements OnInit {
+export class ManifiestoAduanasComponent extends Messages {
 
-  msjValidacion: String = '';
-  msjErrorService: String = '';
-
-  mostarMsjValidacion: Boolean = false;
-  mostarMsjErrorService: Boolean = false;
-
-  urlDownload: any;
-  urlFTP: any;
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
+  private urlDownload: any;
+  private urlFTP: any;
 
   constructor(private aduanaService: AduanasService, private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) {
-
-  }
-
-  ngOnInit() {
+    super();
   }
 
   generarDocAduanas(event) {
@@ -44,26 +36,33 @@ export class ManifiestoAduanasComponent implements OnInit {
 
       this.aduanaService.getData(nroGuia).subscribe(data => {
 
-        const url: string = this.urlDownload + '"' + this.urlFTP + data.archivoGenerado + '"';
+        if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.mostarMsjErrorService = true;
+          this.msjErrorService = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+          this.spinner.hide();
+          return;
+        }
 
+        if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.mostarMsjErrorService = true;
+          this.msjErrorService = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+          this.spinner.hide();
+          return;
+        }
+
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.body.archivoGenerado + '"';
         this.downloadFile.getFileDownload(url, 'xml');
-
-        /***********funciona pdf) *****
-          this.getPDF(url).subscribe((response) => {
-          const file = new Blob([response], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL); } );
-        **********funciona pdf) ******/
-
         this.spinner.hide();
         this.msjErrorService = null;
         this.mostarMsjErrorService = false;
 
       },
         error => {
+          var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+          errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
           this.spinner.hide();
           this.mostarMsjErrorService = true;
-          this.msjErrorService = "" + error.message;
+          this.msjErrorService = errorMessage;
         }
       );
     }

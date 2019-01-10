@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ImpresionService } from './ImpresionService';
+import { Component } from '@angular/core';
 import { DownloadFile } from '../Services/DownloadFile';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { Messages} from '../Library/Messages';
 import { ConfigService } from '../ReadConfig/read-config';
 
 @Component({
@@ -11,23 +9,14 @@ import { ConfigService } from '../ReadConfig/read-config';
   templateUrl: './impresion-etiqueta.component.html',
   styleUrls: ['./impresion-etiqueta.component.css']
 })
-export class ImpresionEtiquetaComponent implements OnInit {
+export class ImpresionEtiquetaComponent extends Messages{
 
-  mostrarMsgValidaciones: Boolean = false;
-  mostrarMsgDescarga: Boolean = false;
-  mostrarMsgError: Boolean = false;
+  private urlModal: any;
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
 
-  mensajeValidacuines: String = '';
-  mensajeDescarga: String = '';
-  mensajeError: String = '';
-
-  urlModal: any;
-
-  constructor(private impresionService: ImpresionService, private downloadFile: DownloadFile, private httpClient: HttpClient, private spinner: NgxSpinnerService, private configService: ConfigService) {
-
-  }
-
-  ngOnInit() {
+  constructor(private downloadFile: DownloadFile, private spinner: NgxSpinnerService, private configService: ConfigService) {
+    super();
   }
 
   generar(event) {
@@ -47,12 +36,18 @@ export class ImpresionEtiquetaComponent implements OnInit {
     if (nroGuia === '' && opcion === 'void') {
       this.mostrarMsgValidaciones = true;
       this.mensajeValidacuines = 'Debe diligenciar número de guía y seleccionar una opción.';
+      this.spinner.hide();
+      return;
     } else if (nroGuia === '') {
       this.mostrarMsgValidaciones = true;
       this.mensajeValidacuines = 'Debe diligenciar el número de guía.';
+      this.spinner.hide();
+      return;
     } else if (opcion === 'void') {
       this.mostrarMsgValidaciones = true;
       this.mensajeValidacuines = 'Debe seleccionar una opción.';
+      this.spinner.hide();
+      return;
     } else {
       this.mostrarMsgValidaciones = false;
       this.mensajeValidacuines = '';
@@ -60,7 +55,6 @@ export class ImpresionEtiquetaComponent implements OnInit {
 
     this.urlModal = this.configService.loadJSON('./assets/config.js')['URL_IMP_ETIQUETA_MODAL'];
 
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url: string = this.urlModal + nroGuia + '&tipo=' + opcion;
     console.log('*****DOWNLOAD URL***** ', url);
 

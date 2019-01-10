@@ -41,7 +41,7 @@ export class AduanasService {
 
     
     //Send POST
-    return this.httpClient.post<SPathAduanas>(this.urlService, body, { headers });
+    return this.httpClient.post<SPathAduanas>(this.urlService, body, { headers , observe: 'response'});
 
   }
 }

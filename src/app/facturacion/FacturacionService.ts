@@ -44,9 +44,9 @@ export class FacturacionService {
 
     //Send POST
     if (tipo === 'Facturacion Flete') {
-      return this.httpClient.post<SPath>(this.urlFacturacionFleteService, body, { headers });
+      return this.httpClient.post<SPath>(this.urlFacturacionFleteService, body, { headers , observe: 'response'});
     } else {
-      return this.httpClient.post<SPath>(this.urlFacturacionImpuestoService, body, { headers });
+      return this.httpClient.post<SPath>(this.urlFacturacionImpuestoService, body, { headers , observe: 'response'});
     }
   }
 }

@@ -1,40 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FacturacionService } from './FacturacionService';
 import { DownloadFile } from '../Services/DownloadFile';
-
 import { ConfigService } from '../ReadConfig/read-config';
+import { Messages} from '../Library/Messages';
 
 @Component({
   selector: 'app-facturacion',
   templateUrl: './facturacion.component.html',
   styleUrls: ['./facturacion.component.css']
 })
-export class FacturacionComponent implements OnInit {
-  selectedFactura: String = '';
-  facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
-  isChecked: Boolean = false;
-  tipoFactura: String;
-  mostrarMensajeValidacion: Boolean = false;
-  mensajeValidacion: String = '';
-
-  urlDownload: any;
-  urlFTP: any;
+export class FacturacionComponent extends Messages {
+  private selectedFactura: String = '';
+  private facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
+  private isChecked: Boolean = false;
+  private tipoFactura: String;
+  private urlDownload: any;
+  private urlFTP: any;
 
   constructor(private spinner: NgxSpinnerService, private facturacionService: FacturacionService, private downloadFile: DownloadFile, private configService: ConfigService) {
-
+    super();
   }
-
-  ngOnInit() {
-
-  }
-
   radioCheked(event: any) {
-
     this.isChecked = true;
     this.selectedFactura = event.target.value;
     this.tipoFactura = this.selectedFactura;
-
   }
 
   facturar(event) {
@@ -50,7 +40,7 @@ export class FacturacionComponent implements OnInit {
       this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_FTP'];
 
       this.facturacionService.getData(fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe(data => {
-        const url: string = this.urlDownload + '"' + this.urlFTP + data.fileName + '"';
+        const url: string = this.urlDownload + '"' + this.urlFTP + data.body.fileName + '"';
         this.downloadFile.getFileDownload(url, 'pdf');
 
         this.spinner.hide();
@@ -102,10 +92,5 @@ export class FacturacionComponent implements OnInit {
 
       }
     }
-
-
   }
-
-
-
 }

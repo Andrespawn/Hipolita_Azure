@@ -1,43 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfigService } from '../ReadConfig/read-config';
 import { AsignarGuiaMasterService } from './asignarGuiaMaster.service';
+import { Messages} from '../Library/Messages';
 
 @Component({
   selector: 'app-guia-master',
   templateUrl: './guia-master.component.html',
   styleUrls: ['./guia-master.component.css']
 })
-export class GuiaMasterComponent implements OnInit {
+export class GuiaMasterComponent extends Messages implements OnInit {
 
-  guias: { varCheck: boolean, client_reference: string, Shipment_number: string, guiamaster: string, guiamasterdate: string }[] = [];
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
+  private closeResult: string;
+  private varChecked;
+  private urlService: any;
+  private guias: { varCheck: boolean, client_reference: string, Shipment_number: string, guiamaster: string, guiamasterdate: string }[] = [];
+  private listGuias: String[] = [];
 
-  listGuias: String[] = [];
 
-  mensajeAlerta: String = '';
-  mensajeAlertaMawb: String = '';
-  mensajeSuccessMawb: String = '';
-  mensajeErrorMawb: String = '';
-  mensajeErrorService: String = '';
-  mensajeResponse: String = '';
-
-  varChecked;
-
-  mostrarMensajeResponse: Boolean = false;
-  mostrarMensaje: Boolean = false;
-  mostrarTbl: Boolean = false;
-  mostrarBtnMAWB: Boolean = false;
-  mostrarMensajeMawb: Boolean = false;
-  mostrarMenSuccessMawb: Boolean = false;
-  mostrarMenErrorMawb: Boolean = false;
-  mostrarMenErrorService: Boolean = false;
-
-  urlService: any;
-
-  constructor(private httpClient: HttpClient, private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService, private guiaMasterService: AsignarGuiaMasterService) {
-
+  constructor(private modalService: NgbModal, private spinner: NgxSpinnerService, private configService: ConfigService, private guiaMasterService: AsignarGuiaMasterService) {
+    super();
   }
 
   ngOnInit() {
@@ -65,14 +50,10 @@ export class GuiaMasterComponent implements OnInit {
     
     console.log("Datos ingresados [Fecha Inicio: ",fechaIni," , Fecha Fin: ",fechaFin," , Nro Guia: ",nroGuia,"]");
 
-    const validacionCampos = this.validarCampos(fechaIni, fechaFin, nroGuia);
-
-    if (validacionCampos) {
-      const fechasValidas = this.validarFechas(fechaIni, fechaFin);
-      if (fechasValidas) {
+    if (this.validarCampos(fechaIni, fechaFin, nroGuia) && this.validarFechas(fechaIni, fechaFin)) {
         this.consumirServicio(nroGuia, fechaIni, fechaFin);
       }
-    }
+
     if (this.guias === null) {
       target.querySelector('#txtDateIni').value = null;
       target.querySelector('#txtDateFin').value = null;
@@ -85,30 +66,35 @@ export class GuiaMasterComponent implements OnInit {
     
     this.guiaMasterService.getData(fechaI, fechaF, true, [numGuia], '', '').subscribe(
       data => {
-        this.guias = data;
+        if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.setErrorMessage(true, data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'), false);
+          this.spinner.hide();
+          return;
+        }
+
+        if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.setAlertMessage(true, data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'), false);
+          this.spinner.hide();
+          return;
+        }
+
+        this.guias = data.body;
         for (let index in this.guias) {
           this.guias[index].varCheck = false;
         }
 
         if (this.guias !== null) {
-          this.mostrarMensajeResponse = false;
-          this.mensajeResponse = null;
-          this.mostrarTbl = true;
+          this.setInfoMessage(false, null, true);
         } else {
-          this.mostrarMensajeResponse = true;
-          this.mensajeResponse = 'No se encontraron resultados';
-          this.mostrarTbl = false;
+          this.setInfoMessage(true, 'No se encontraron resultados', false);
         }
-
         this.spinner.hide();
-
       },
       error => {
-        this.mostrarTbl = false;
-        this.mostrarMenErrorService = true;
-        this.mensajeErrorService = '' + error.message;
+        var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+        errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
+        this.setErrorMessage(true, errorMessage, false);
         this.spinner.hide();
-
       }
     );
   }
@@ -124,12 +110,7 @@ export class GuiaMasterComponent implements OnInit {
       }
     }
 
-    if (this.listGuias.length > 0) {
-      this.mostrarBtnMAWB = true;
-    } else {
-      this.mostrarBtnMAWB = false;
-    }
-
+    this.mostrarBtnMAWB = this.listGuias.length > 0 ? true : false;
   }
 
   validarCampos(fecIni, fecFin, nroG) {
@@ -176,14 +157,8 @@ export class GuiaMasterComponent implements OnInit {
     const nroMawb = target.querySelector('#txtNroMawb').value;
     const fechMawb: Date = target.querySelector('#txtFechMawb').value;
 
-    const validacionCampos = this.validarCamposMawb(nroMawb, fechMawb);
-
-    if (validacionCampos) {
+    if (this.validarCamposMawb(nroMawb, fechMawb)) 
       this.consumirServiciodos(nroMawb, fechMawb);
-    } else {
-
-    }
-    
   }
 
   validarCamposMawb(varNroMawb, varFechMawb) {
@@ -197,55 +172,43 @@ export class GuiaMasterComponent implements OnInit {
   }
 
   consumirServiciodos(varNroMawb, varFechMawb) {
-
     this.spinner.show();
 
     this.guiaMasterService.getData('', '', false, this.listGuias, varNroMawb, varFechMawb).subscribe(
       data => {
-        this.mensajeAlerta = '';
-        this.mensajeAlertaMawb = '';
+        if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.hideGuiasMasterMessage('', data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'));
+          this.serviceResultGuiasMaster(false, true);
+          this.spinner.hide();
+          return;
+        }
 
-        this.mostrarMensaje = false;
-        this.mostrarTbl = false;
-        this.mostrarBtnMAWB = false;
-        this.mostrarMensajeMawb = false;
-        this.listGuias = [];
-        // this.guias = null;
-        this.mensajeSuccessMawb = 'Guia(s) Actualizada(s)';
-        this.mostrarMenSuccessMawb = true;
-        this.mostrarBtnMAWB = false;
-        this.mostrarMenErrorMawb = false;
-        this.modalService.dismissAll();
-        this.spinner.hide();
+        if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+          this.hideGuiasMasterMessage(data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje'),'');
+          this.serviceResultGuiasMaster(true, false);
+          this.spinner.hide();
+          return;
+        }
+
+        this.hideGuiasMasterMessage('Guia(s) Actualizada(s)','');
+        this.serviceResultGuiasMaster(true, false);
       },
       error => {
-        this.mensajeAlerta = '';
-        this.mensajeAlertaMawb = '';
-
-        this.mostrarMensaje = false;
-        this.mostrarTbl = false;
-        this.mostrarBtnMAWB = false;
-        this.mostrarMensajeMawb = false;
-
-        this.listGuias = [];
-        this.mensajeSuccessMawb = '';
-        this.mostrarMenSuccessMawb = false;
-        this.mostrarBtnMAWB = false;
-        this.mensajeErrorMawb = error.message;
-        this.mostrarMenErrorMawb = true;
-
-        this.modalService.dismissAll();
-        this.spinner.hide();
+        var errorMessage = error.headers.get('SCodigo') == null ? error.status + ' - ' : error.headers.get('SCodigo')  + ' - ';
+        errorMessage += error.headers.get('SMensaje') == null ? error.statusText : error.headers.get('SMensaje');
+        this.hideGuiasMasterMessage('', errorMessage);
+        this.serviceResultGuiasMaster(false, true);
       }
     );
-
   }
 
-  /************/
-
-
-
-  closeResult: string;
+  serviceResultGuiasMaster(showMenSuccessMawb : boolean, showMenErrorMawb : boolean){
+    this.listGuias = [];
+    this.mostrarMenSuccessMawb = showMenSuccessMawb;
+    this.mostrarMenErrorMawb = showMenErrorMawb;
+    this.modalService.dismissAll();
+    this.spinner.hide();
+  }
 
   open(content) {
     this.mensajeAlertaMawb = '';
@@ -269,7 +232,6 @@ export class GuiaMasterComponent implements OnInit {
     }
   }
 
-
   checkedAll(isChecked) {
 
     if (isChecked) {
@@ -285,15 +247,7 @@ export class GuiaMasterComponent implements OnInit {
 
       }
     }
-
-
-    if (this.listGuias.length > 0) {
-      this.mostrarBtnMAWB = true;
-    } else {
-      this.mostrarBtnMAWB = false;
-    }
+    this.mostrarBtnMAWB = this.listGuias.length > 0 ? true : false;
   }
 
 }
-
-

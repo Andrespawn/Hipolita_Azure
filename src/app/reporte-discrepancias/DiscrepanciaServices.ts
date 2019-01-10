@@ -40,7 +40,7 @@ export class DiscrepanciaServices {
 
     //Send POST
     return this.httpClient.post<SPathDiscrepacias>(this.urlService,
-      body, { headers });
+      body, { headers , observe: 'response'});
 
   }
 }
