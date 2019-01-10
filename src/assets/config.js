@@ -16,8 +16,12 @@
     "URL_REPO_DISCREPANCIAS_DOWNLOAD":"https://azwappfronthipodev.azaseusedev.avtest.online/api/ServicesFiles/GetFile?pathRemoteFile=",
     "URL_REPO_DISCREPANCIAS_FTP":"/ftp/HIPOLITA/DEV/Discrepancias/",
     "APIM_SUBSCRIPTION_KEY":"80336ece60c2410c86a8c7503170af68",
+<<<<<<< HEAD
     "URL_FACTURA_COMERCIAL_SERVICE":"http://localhost:8182/cxf/rest/hipolita/ConsultaArchivos",
     "ESB_ERROR_STATUS" : "400-412-500-408",
     "ESB_COMPLETE_WITH_ERROR_STATUS" : "204",
+=======
+>>>>>>> e35b98f028c7f75f0d770ea5fbc225acaffc3031
     "URL_FACTURA_COMERCIAL_SERVICE":"http://localhost:8182/cxf/rest/hipolita/ConsultaArchivos"
+
 }
