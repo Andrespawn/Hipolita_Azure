@@ -11,6 +11,8 @@ import { Messages} from '../Library/Messages';
   styleUrls: ['./facturacion.component.css']
 })
 export class FacturacionComponent extends Messages {
+  private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
+  private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
   private selectedFactura: String = '';
   private facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
   private isChecked: Boolean = false;
@@ -38,14 +40,35 @@ export class FacturacionComponent extends Messages {
 
       this.urlDownload = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_DOWNLOAD'];
       this.urlFTP = this.configService.loadJSON('./assets/config.js')['URL_FACTURACION_FTP'];
-
+            
       this.facturacionService.getData(fechaFactura_ini, fechaFactura_fin, this.tipoFactura).subscribe(data => {
-        const url: string = this.urlDownload + '"' + this.urlFTP + data.body.fileName + '"';
-        this.downloadFile.getFileDownload(url, 'pdf');
+        if(data.body === null){
+          if(data.headers.get('SCodigo') != null && this.esbErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.mostrarMensajeValidacion = true;
+            this.mensajeValidacion = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+            this.spinner.hide();
+            return;
+          }
+  
+          if(data.headers.get('SCodigo') != null && this.esbCompleteWithErrorCodes.includes(data.headers.get('SCodigo'))){
+            this.mostrarMensajeValidacion = true;
+            this.mensajeValidacion = data.headers.get('SCodigo')  + ' - ' + data.headers.get('SMensaje');
+            this.spinner.hide();
+            return;
+          }
+          
+        }else{
+          console.log('entro')
+          const url: string = this.urlDownload + '"' + this.urlFTP + data.body.fileName + '"';
+          this.downloadFile.getFileDownload(url, 'pdf');
+        }
 
+        
+        
         this.spinner.hide();
       },
         error => {
+
           this.spinner.hide();
         }
       );
