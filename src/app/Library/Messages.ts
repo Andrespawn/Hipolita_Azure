@@ -1,37 +1,41 @@
 export class Messages {
 
-    protected mensajeAlerta: String;
-    protected mensajeAlertaMawb: String;
-    protected mensajeSuccessMawb: String;
-    protected mensajeErrorMawb: String;
-    protected mensajeErrorService: String;
-    protected mensajeResponse: String;
-    protected mostrarMensajeResponse: Boolean;
-    protected mostrarMensaje: Boolean;
-    protected mostrarTbl: Boolean;
-    protected mostrarBtnMAWB: Boolean;
-    protected mostrarMensajeMawb: Boolean;
-    protected mostrarMenSuccessMawb: Boolean;
-    protected mostrarMenErrorMawb: Boolean;
-    protected mostrarMenErrorService: Boolean;
-    protected mostrarMensajeValidacionForm: Boolean;
-    protected mostrarMensajeFileVoid: Boolean;
-    protected mensajeAlertaValidacionForm: String;
-    protected mensajeAlertaErrorService: String;
-    protected mensajeAlertaFileVoid: String;
-    protected mostrarMensajeErrorService: Boolean;
-    protected mostrarMensajeValidacion: Boolean;
-    protected mensajeValidacion: String;
-    protected mostrarMsgValidaciones: Boolean;
-    protected mostrarMsgDescarga: Boolean;
-    protected mostrarMsgError: Boolean;
-    protected mensajeValidacuines: String;
-    protected mensajeDescarga: String;
-    protected mensajeError: String;
-    protected msjValidacion: String;
-    protected msjErrorService: String;
-    protected mostarMsjValidacion: Boolean;
-    protected mostarMsjErrorService: Boolean;
+    mensajeAlerta: String;
+    mensajeAlertaMawb: String;
+    mensajeSuccessMawb: String;
+    mensajeErrorMawb: String;
+    mensajeErrorService: String;
+    mensajeResponse: String;
+    mostrarMensajeResponse: Boolean;
+    mostrarMensaje: Boolean;
+    mostrarTbl: Boolean;
+    mostrarBtnMAWB: Boolean;
+    mostrarMensajeMawb: Boolean;
+    mostrarMenSuccessMawb: Boolean;
+    mostrarMenErrorMawb: Boolean;
+    mostrarMenErrorService: Boolean;
+    mostrarMensajeValidacionForm: Boolean;
+    mostrarMensajeFileVoid: Boolean;
+    mensajeAlertaValidacionForm: String;
+    mensajeAlertaErrorService: String;
+    mensajeAlertaFileVoid: String;
+    mostrarMensajeErrorService: Boolean;
+    mostrarMensajeValidacion: Boolean;
+    mensajeValidacion: String;
+    mostrarMsgValidaciones: Boolean;
+    mostrarMsgDescarga: Boolean;
+    mostrarMsgError: Boolean;
+    mensajeValidacuines: String;
+    mensajeDescarga: String;
+    mensajeError: String;
+    msjValidacion: String;
+    msjErrorService: String;
+    mostarMsjValidacion: Boolean;
+    mostarMsjErrorService: Boolean;
+    verMensajeValidacion: boolean;
+    verMensajeError: boolean;
+    verMensajeInfo: boolean;
+    verTable: boolean;
 
     constructor(){
         this.mensajeAlerta = '';
@@ -68,25 +72,25 @@ export class Messages {
         this.mostarMsjErrorService = false;
     }
 
-    protected setInfoMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
+    setInfoMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
         this.mostrarMensajeResponse = showMessage;
         this.mensajeResponse = responseMessage;
         this.mostrarTbl = showTable;
     }
     
-    protected setAlertMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
+    setAlertMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
         this.mostrarTbl = showTable;
         this.mensajeAlerta = responseMessage;
         this.mostrarMensaje = showMessage;
     }
     
-    protected setErrorMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
+    setErrorMessage(showMessage : boolean, responseMessage : string, showTable : boolean){
         this.mostrarTbl = showTable;
         this.mostrarMenErrorService = showMessage;
         this.mensajeErrorService = responseMessage;
     }
 
-    protected hideGuiasMasterMessage(message : string, errorMessageMawb : string){
+    hideGuiasMasterMessage(message : string, errorMessageMawb : string){
         this.mensajeAlerta = '';
         this.mensajeAlertaMawb = '';
         this.mostrarMensaje = false;
@@ -98,7 +102,7 @@ export class Messages {
         this.mensajeErrorMawb = errorMessageMawb;
     }
 
-    protected showErrorMessageSearchDocumentPath(showErrorMessage : boolean, errorMessage : string, showFileMessage : boolean, fileMessage : string){
+    showErrorMessageSearchDocumentPath(showErrorMessage : boolean, errorMessage : string, showFileMessage : boolean, fileMessage : string){
         this.mostrarMensajeErrorService = showErrorMessage;
         this.mensajeAlertaErrorService = errorMessage;
         this.mostrarMensajeFileVoid = showFileMessage;

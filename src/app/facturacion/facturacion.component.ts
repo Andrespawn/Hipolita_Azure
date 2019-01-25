@@ -14,7 +14,7 @@ export class FacturacionComponent extends Messages {
   private esbErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_ERROR_STATUS'];
   private esbCompleteWithErrorCodes : string = this.configService.loadJSON('./assets/config.js')['ESB_COMPLETE_WITH_ERROR_STATUS'];
   private selectedFactura: String = '';
-  private facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
+  facturaciones: any = ['Facturacion Flete', 'Facturacion impuestos'];
   private isChecked: Boolean = false;
   private tipoFactura: String;
   private urlDownload: any;
